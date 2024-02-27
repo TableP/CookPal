@@ -40,7 +40,6 @@
             </div>
 
             <div class="vr"></div>
-            
             <div class="container">
                 <form class="mb-5 mt-5 mx-5 my-5">
                     <div>
@@ -64,7 +63,7 @@
                     </div>
 
                     <div>
-                        <label for="phone" class="form-label mt-3">Email</label>
+                        <label for="phone" class="form-label mt-3">Phone</label>
                         <input type="number" class="form-control" id="phone" placeholder="Enter phone" name="phone">
                     </div>
 
@@ -76,7 +75,35 @@
             </div>
         </div>
     </div>
-    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        // Wait for the document to load before running scripts
+        document.addEventListener("DOMContentLoaded", function() {
+            // Handle login form submission
+            const loginForm = document.querySelector("form"); // Assuming the first form is for login
+            loginForm.addEventListener("submit", function(event) {
+                event.preventDefault(); // Prevent the form from submitting the traditional way
+                const username = document.getElementById("login-username").value;
+                const password = document.getElementById("login-password").value;
+                console.log("Login Form Submitted");
+                console.log("Username:", username, "Password:", password);
+                // Further processing here, like sending data to the server
+            });
+
+            // Handle signup form submission
+            const signupForm = document.querySelectorAll("form")[1]; // Assuming the second form is for signup
+            signupForm.addEventListener("submit", function(event) {
+                event.preventDefault(); // Prevent the form from submitting the traditional way
+                const username = document.getElementById("Signup-username").value;
+                const password = document.getElementById("Signup-password").value;
+                const nickname = document.getElementById("Signup-Nickname").value;
+                const email = document.getElementById("email").value;
+                const phone = document.getElementById("phone").value;
+                console.log("Signup Form Submitted");
+                console.log("Username:", username, "Password:", password, "Nickname:", nickname, "Email:", email, "Phone:", phone);
+                // Further processing here, like sending data to the server
+            });
+        });
+    </script>
 </body>
 </html>
