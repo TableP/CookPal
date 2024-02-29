@@ -1,0 +1,15 @@
+.rating {
+    direction: rtl;
+    unicode-bidi: bidi-override;
+    font-size: 30px;
+  }
+  
+.star {
+    cursor: pointer;
+    color: gold;
+  }
+
+.dateInComment{
+    color:grey;
+}
+  
