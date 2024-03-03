@@ -1,6 +1,9 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-class User(models.Model):
+class UserAccount(models.Model):
+    #testing base authentication until real user authentication is implemented
+    user=models.OneToOneField(User, on_delete=models.CASCADE)
     # UserID is the primary key
     UserID = models.CharField(max_length=30, primary_key=True)
     # Other fields
@@ -8,6 +11,7 @@ class User(models.Model):
     Password = models.CharField(max_length=30)
     Email = models.CharField(max_length=30)
     PhoneNumber = models.CharField(max_length=30)
+    Nickname = models.CharField(max_length=30)
     # Get the primary key
     def __str__(self):
         return self.UserID
@@ -28,7 +32,17 @@ class Customer_Support(models.Model):
     # Admin is the primary key
     # Admin and Site_Admin are one-to-one
     Admin = models.OneToOneField(Site_Admin, on_delete=models.CASCADE, primary_key=True)
-    
+
+class Collection(models.Model):
+    # CollectionID is the primary key
+    CollectionID = models.CharField(max_length=30, primary_key=True)
+    # User and Collection are one-to-many
+    User = models.ForeignKey(User,related_name="collections", on_delete=models.CASCADE)
+    # Other fields
+    CollectionName = models.CharField(max_length=255)
+    # Get the primary key
+    def __str__(self):
+        return self.CollectionID
 class Recipe(models.Model):
     # RecipeID is the primary key
     RecipeID = models.CharField(max_length=30, primary_key=True)
@@ -79,16 +93,7 @@ class Rating(models.Model):
     def __str__(self):
         return self.RatingID
 
-class Collection(models.Model):
-    # CollectionID is the primary key
-    CollectionID = models.CharField(max_length=30, primary_key=True)
-    # User and Collection are one-to-many
-    User = models.ForeignKey(User,related_name="collections", on_delete=models.CASCADE)
-    # Other fields
-    CollectionName = models.CharField(max_length=255)
-    # Get the primary key
-    def __str__(self):
-        return self.CollectionID
+
 
 class Reported_Recipe(models.Model):
     # ReportID is the primary key
@@ -96,7 +101,8 @@ class Reported_Recipe(models.Model):
     # User and Reported_Recipe are one-to-many
     User = models.ForeignKey(User,related_name="reports", on_delete=models.CASCADE)
     # Customer_Support and Reported_Recipe are one-to-many
-    Customer_Support = models.ForeignKey(Customer_Support,related_name="reported_recipes", on_delete=models.SET_NULL)
+    #added null=true to the parameters to allow for on_delete to be able to set model to null
+    Customer_Support = models.ForeignKey(Customer_Support,related_name="reported_recipes", on_delete=models.SET_NULL, null=True)
     # Recipe and Reported_Recipe are one-to-many
     ReportedRecipe = models.OneToOneField(Recipe, on_delete=models.CASCADE)
     # Other fields

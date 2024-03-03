@@ -18,7 +18,7 @@
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                 <span class="fs-4">CookPal</span>
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                    <li><a href="#" class="nav-link px-2 link-secondary">Homepage</a></li>
+                    <li><a href="{% url 'app:homepage' %}" class="nav-link px-2 link-secondary">Homepage</a></li>
                 </ul>
             </div>
         </div>
@@ -27,7 +27,8 @@
     <div class="container">
         <div class="d-flex">
             <div class="container">
-                <form class="mb-5 mt-5 mx-5 my-5" id="loginForm">
+                <form class="mb-5 mt-5 mx-5 my-5" id="loginForm" method="post" action="{% url 'app:login' %}">
+                    {% csrf_token %}
                     <div>
                         <label for="login-username" class="form-label">Username</label>
                         <input type="text" class="form-control" id="login-username" placeholder="Enter username" name="login-username">
@@ -47,7 +48,8 @@
 
             <div class="vr"></div>
             <div class="container">
-                <form class="mb-5 mt-5 mx-5 my-5" id="signupForm">
+                <form class="mb-5 mt-5 mx-5 my-5" id="signupForm" method="post" action="{% url 'app:login' %}">
+                    {% csrf_token %}
                     <div>
                         <label for="Signup-username" class="form-label">Username</label>
                         <input type="text" class="form-control" id="Signup-username" placeholder="Enter username" name="Signup-username">
@@ -92,7 +94,7 @@
         </div>
     </div>
 
-    <script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">
         document.addEventListener("DOMContentLoaded", function() {
             const loginForm = document.getElementById("loginForm");
             loginForm.addEventListener("submit", function(event) {
@@ -110,6 +112,7 @@
                     const password = document.getElementById("login-password").value;
                     console.log("Login Form Submitted");
                     console.log("Username:", username, "Password:", password);
+                    submitLoginRequest(username, password)
                 }
             });
 
@@ -147,6 +150,22 @@
                     console.log("Username:", username, "Password:", password, "Nickname:", nickname, "Email:", email, "Phone:", phone);
                 }
             });
+
+            function submitLoginRequest(username, password) {
+                console.log("attempting to submit form")
+                $.ajax({
+                    type: "POST",
+                    headers: {
+                        'Content-Type':'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    url: "login/",
+                    data: JSON.stringify({'Username': username, 'Password': password}),
+                    success: function(json) {
+                    console.log("successful request")
+                    }
+                })
+            }
 
             function validateField(fieldId, isEmail=false) {
                 const value = document.getElementById(fieldId).value;
