@@ -56,8 +56,8 @@ class LoginView(View):
             print(username, password)
             print(nickname, email, phoneNumber)
 
-            #newUser = User(userid=0)
-            newUserAccount = UserAccount( UserID="123", UserName=username, Password=password, Nickname=nickname, Email=email, PhoneNumber=phoneNumber)
+            newUser = User.objects.create_user(username=username, password=password)
+            newUserAccount = UserAccount(user=newUser,Nickname=nickname, Email=email, PhoneNumber=phoneNumber)
             newUserAccount.save()
             return render(request, 'app/homepage.html')
 
