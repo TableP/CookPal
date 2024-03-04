@@ -7,6 +7,10 @@ class UserAccount(models.Model):
     Email = models.CharField(max_length=30)
     PhoneNumber = models.CharField(max_length=30)
     Nickname = models.CharField(max_length=30)
+
+    #Added this by Nduka
+    def __str__(self):
+        return self.user.username
     # Get the primary key
 
 

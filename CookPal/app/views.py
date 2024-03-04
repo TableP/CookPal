@@ -38,15 +38,14 @@ class GeneralSupportView(View):
     def get(self, request):
         return render(request, 'app/generalsupport.html')
 
+#Made changes to the View page
 class LoginView(View):
     def get(self, request):
         return render(request, 'app/login.html')
 
-
     def post(self, request):
-        #checks if button pressed is login or register
-        #if registering then this block is ran
-        if request.POST.get('login-username') is None:
+        # Check if the request is for user registration
+        if 'login-username' not in request.POST:
             username = request.POST.get('Signup-username')
             password = request.POST.get('Signup-password')
             nickname = request.POST.get('Signup-Nickname')
@@ -56,8 +55,12 @@ class LoginView(View):
             print(username, password)
             print(nickname, email, phoneNumber)
 
+            # Check if the username already exists
+            if User.objects.filter(username=username).exists():
+                return HttpResponse("Username already exists. Choose a different username.")
+
             newUser = User.objects.create_user(username=username, password=password)
-            newUserAccount = UserAccount(user=newUser,Nickname=nickname, Email=email, PhoneNumber=phoneNumber)
+            newUserAccount = UserAccount(user=newUser, Nickname=nickname, Email=email, PhoneNumber=phoneNumber)
             newUserAccount.save()
             return render(request, 'app/homepage.html')
 
@@ -65,6 +68,7 @@ class LoginView(View):
             username = request.POST.get('login-username')
             password = request.POST.get('login-password')
             user = authenticate(username=username, password=password)
+
             if user:
                 if user.is_active:
                     login(request, user)
@@ -76,7 +80,6 @@ class LoginView(View):
                 return HttpResponse("INVALID LOGIN")
 
             return render(request, 'app/login.html')
-
 class ReportView(View):
     def get(self, request):
         return render(request, 'app/report.html')
