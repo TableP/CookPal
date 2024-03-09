@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <header class="p-3 mb-3 border-bottom">
         <div class="container">
           <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
@@ -45,53 +46,27 @@
             <div class="row align-items-md-stretch">
                 <div class="col-md-6">
                     <div class="h-100 p-5 text-bg-dark rounded-3">
-                        <div id="imageCarousel" class="carousel slide mb-6" data-bs-ride="carousel">
-                            <div class="carousel-indicators">
-                            <button type="button" data-bs-target="#imageCarousel" data-bs-slide-to="0" class="" aria-label="Slide 1"></button>
-                            <button type="button" data-bs-target="#imageCarousel" data-bs-slide-to="1" aria-label="Slide 2" class="active" aria-current="true"></button>
-                            <button type="button" data-bs-target="#imageCarousel" data-bs-slide-to="2" aria-label="Slide 3" class=""></button>
-                            </div>
-                
+                        <div id="carouselImageAutoplaying" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-inner">
-
-                            <div class="carousel-item">
-                                <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect></svg>
-                                <div class="container">
-                                <div class="carousel-caption">
-                                    <p>Image 1</p>
-                                </div>
-                                </div>
+                              <div class="carousel-item active">
+                                <img src="logo.png" class="d-block w-100" alt="images">
+                              </div>
+                              <div class="carousel-item">
+                                <img src="logo.png" class="d-block w-100" alt="images">
+                              </div>
+                              <div class="carousel-item">
+                                <img src="logo.png" class="d-block w-100" alt="images">
+                              </div>
                             </div>
-                
-                            <div class="carousel-item active">
-                                <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect></svg>
-                                <div class="container">
-                                <div class="carousel-caption">
-                                    <p>Image 2</p>
-                                </div>
-                                </div>
-                            </div>
-                
-                            <div class="carousel-item">
-                                <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect></svg>
-                                <div class="container">
-                                <div class="carousel-caption">
-                                    <p>Image 3</p>
-                                </div>
-                                </div>
-                            </div>
-                            </div>
-                
-                            <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselImageAutoplaying" data-bs-slide="prev">
+                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                              <span class="visually-hidden">Previous</span>
                             </button>
-                
-                            <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselImageAutoplaying" data-bs-slide="next">
+                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                              <span class="visually-hidden">Next</span>
                             </button>
-                        </div>
+                          </div>
                     </div>
                 </div>
 

@@ -25,22 +25,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
  
-  // 获取所有的回复按钮
+  // get all reply button
   document.querySelectorAll('.replybtn').forEach(button => {
     button.addEventListener('click', function() {
-      // 获取要显示的回复表单的ID
+      // get id for reply form
       const replyFormId = this.getAttribute('data-comment-id');
-      // 显示对应的回复表单
+      // show the reply form
       document.getElementById(replyFormId).style.display = 'block';
     });
   });
 
-  // 获取所有的提交回复按钮
+  // get all submit reply button
   document.querySelectorAll('.submit-reply').forEach(button => {
     button.addEventListener('click', function() {
-      // 这里可以添加提交回复的逻辑，例如使用AJAX发送回复内容到服务器
-      alert('回复已提交（这里应该替换为实际的提交逻辑）。');
-      // 隐藏回复表单
+      // use AJAX to send reply to server
+      alert('Reply Submitted!');
+      // hide reply form
       this.parentElement.style.display = 'none';
     });
   });
