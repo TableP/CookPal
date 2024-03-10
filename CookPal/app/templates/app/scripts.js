@@ -46,4 +46,22 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
 
+  function copyLink() {
+    var copyText = document.getElementById("shareLinkInput");
+    copyText.select(); // select text
+    copyText.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(copyText.value); // copy the text to clipboard
   
+    navigator.clipboard.writeText(copyText.value).then(() => {
+      // show Toast after copied
+      var toastEl = document.getElementById('copyToast');
+      var toast = new bootstrap.Toast(toastEl);
+      toast.show();
+      var shareModalEl = document.getElementById('shareModal');
+      var shareModal = bootstrap.Modal.getInstance(shareModalEl);
+      shareModal.hide();
+    }, () => {
+      // fail to copy
+      // I don't think we need this
+    });
+  }

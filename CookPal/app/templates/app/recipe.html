@@ -89,12 +89,44 @@
                             Add to Collection
                         </button>
 
-                        <button type="button" class="btn btn-primary mt-5">
+                        <button type="button" class="btn btn-primary mt-5" data-bs-toggle="modal" data-bs-target="#shareModal">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share-fill" viewBox="0 0 16 16">
                                 <path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5"></path>
                             </svg>
                             Share to Others
                         </button>
+
+                        <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="shareModalLabel">Share URL</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                <p>Press the copy to share the URL</p>
+                                <input type="text" readonly class="form-control" id="shareLinkInput" value="https://example.com">
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="copyLink()">Copy</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+                          <div id="copyToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="toast-header">
+                              <strong class="me-auto">Note</strong>
+                              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                            <div class="toast-body">
+                              URL copied to Clipboard!!
+                            </div>
+                          </div>
+                        </div>
+                        
 
                         <button type="button" class="btn btn-outline-danger mt-5">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shield-fill-exclamation" viewBox="0 0 16 16">
