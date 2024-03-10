@@ -40,7 +40,7 @@
       <main>
         <div class="container py-4 border-bottom">
 
-            <h1 class="mb-5">Title of Recipe</h1>
+            <h1 class="mb-5">{{ recipe_name }}</h1>
       
             <div class="row align-items-md-stretch">
                 <div class="col-md-6">
@@ -98,7 +98,7 @@
                 <div class="col-md-6">
                     <div class="h-100 p-5 bg-body-tertiary border rounded-3">
                         <h2>Ingredients</h2>
-                        <p>Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients Ingredients</p>
+                        <p>{{ ingredients }}</p>
                     </div>
                 </div>
 
@@ -134,7 +134,7 @@
                 <div class="p-5 mt-4 col-md-10 bg-body-tertiary rounded-3">
                     <div class="container-fluid py-5">
                         <h1 class="display-5 fw-bold">Instructions</h1>
-                        <p class="col-md-8 fs-4">Instructions here...  Instructions here...  Instructions here...  Instructions here...  Instructions here...  Instructions here...  Instructions here...  Instructions here...  </p>
+                        <p class="col-md-8 fs-4">{{ instructions }}</p>
                     </div>
                 </div>
             </div>

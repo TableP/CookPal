@@ -51,6 +51,8 @@ class Recipe(models.Model):
     Collection = models.ForeignKey(Collection, related_name="recipes", on_delete=models.SET_NULL, null=True, blank=True)
     # Other fields
     Title = models.CharField(max_length=50)
+    Type = models.CharField(max_length=50)
+    Origin = models.CharField(max_length=50)
     Ingredients = models.CharField(max_length=200)
     Instructions = models.CharField(max_length=500)
     PostDate = models.DateTimeField()

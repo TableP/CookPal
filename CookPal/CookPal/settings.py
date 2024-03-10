@@ -136,3 +136,6 @@ LOGIN_REDIRECT_URL = 'app:homepage'
 # The page users are directed to if they are not logged in.
 # This was set in a previous chapter. The registration package uses this, too.
 LOGIN_URL = 'auth_login'
+
+#used to add additional attribute to the base User model
+AUTH_PROFILE_MODULE = 'app.UserAccount'
