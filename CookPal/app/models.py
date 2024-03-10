@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+import hashlib
+import time
+import random
 
 class UserAccount(models.Model):
     #testing base authentication until real user authentication is implemented
@@ -11,7 +14,6 @@ class UserAccount(models.Model):
     #Added this by Nduka
     def __str__(self):
         return self.user.username
-    # Get the primary key
 
 
 class Site_Admin(models.Model):
@@ -25,6 +27,7 @@ class Site_Admin(models.Model):
     # Get the primary key
     def __str__(self):
         return self.AdminID
+    
 
 class Customer_Support(models.Model):
     # Admin is the primary key
@@ -41,6 +44,7 @@ class Collection(models.Model):
     # Get the primary key
     def __str__(self):
         return self.CollectionID
+
 class Recipe(models.Model):
     # RecipeID is the primary key
     RecipeID = models.CharField(max_length=30, primary_key=True)
@@ -60,6 +64,7 @@ class Recipe(models.Model):
     # Get the primary key
     def __str__(self):
         return self.RecipeID
+
 
 class Comment(models.Model):
     # CommentID is the primary key
@@ -93,8 +98,6 @@ class Rating(models.Model):
     def __str__(self):
         return self.RatingID
 
-
-
 class Reported_Recipe(models.Model):
     # ReportID is the primary key
     ReportID = models.CharField(max_length=30, primary_key=True)
@@ -111,3 +114,29 @@ class Reported_Recipe(models.Model):
     # Get the primary key
     def __str__(self):
         return self.ReportID
+
+def uniqueId(String, Model):
+    # The String can be the basic information of object you get now, ex: username, email, etc.
+    # String = UserAccount.email + UserAccount.Nickname + Recipe.Title 
+    # String = UserAccount.email + UserAccount.Nickname + Collection.CollectionName
+    # String = UserAccount.email + UserAccount.Nickname + Comment.Comment
+    # String = UserAccount.email + UserAccount.Nickname + str(Rating.RatingNumber)
+    #...
+
+    # The 1-20 is the hash of string
+    id20 = hashlib.md5(String.encode()).hexdigest()[:20]
+    time = str(time.time())
+    # The 21-28 is the hash of current time
+    id8 = hashlib.md5(time.encode()).hexdigest()[-8:]
+    # The 29-30 is the random character
+    num1 = random.randint(33, 126)
+    num2 = random.randint(33, 126)
+    id2 = chr(num1) + chr(num2)
+    # Combine the 3 parts to get the unique id
+    id = id20 + id8 + id2
+    PrimaryKey = Model._meta.pk.name
+    if Model.objects.filter(**{PrimaryKey : id}).exists():
+        return uniqueId(String, Model)  
+    else:
+        return id
+
