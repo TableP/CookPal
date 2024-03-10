@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app',
-    'registration'
+    'registration',
 ]
 
 MIDDLEWARE = [
@@ -133,9 +133,8 @@ REGISTRATION_OPEN = True
 REGISTRATION_AUTO_LOGIN = True
 # The URL that Django redirects users to after logging in.
 LOGIN_REDIRECT_URL = 'app:homepage'
-# The page users are directed to if they are not logged in.
-# This was set in a previous chapter. The registration package uses this, too.
-LOGIN_URL = 'auth_login'
+
+LOGIN_URL = 'app:login'
 
 #used to add additional attribute to the base User model
 AUTH_PROFILE_MODULE = 'app.UserAccount'
