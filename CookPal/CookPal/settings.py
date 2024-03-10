@@ -14,7 +14,9 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+MEDIA_DIR = os.path.join(BASE_DIR, 'media')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -61,7 +63,7 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [TEMPLATE_DIR,],
+        'DIRS': [TEMPLATE_DIR, ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -126,7 +128,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-
+LOGIN_URL ='app:login'
 # If True, users can register.
 REGISTRATION_OPEN = True
 # If True, the user will be automatically logged in after registering.
@@ -134,7 +136,7 @@ REGISTRATION_AUTO_LOGIN = True
 # The URL that Django redirects users to after logging in.
 LOGIN_REDIRECT_URL = 'app:homepage'
 
-LOGIN_URL = 'app:login'
+LOGIN_URL = 'auth_login'
 
 #used to add additional attribute to the base User model
 AUTH_PROFILE_MODULE = 'app.UserAccount'

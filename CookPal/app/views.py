@@ -44,6 +44,7 @@ class GeneralSupportView(View):
         return render(request, 'app/generalsupport.html')
 
 #Made changes to the View page
+'''
 class LoginView(View):
     def get(self, request):
         return render(request, 'app/login.html')
@@ -85,6 +86,7 @@ class LoginView(View):
                 return HttpResponse("INVALID LOGIN")
 
             return render(request, 'app/login.html')
+'''
 class ReportView(View):
     def get(self, request):
         return render(request, 'app/report.html')

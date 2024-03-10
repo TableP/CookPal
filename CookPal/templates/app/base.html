@@ -24,12 +24,13 @@
 
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li><a href="{% url 'app:homepage' %}" class="nav-link px-2 link-body-emphasis">Homepage</a></li>
+		<li><a href="{% url 'app:about' %}" class="nav-link px-2 link-body-emphasis">About</a></li>
                 {% if user.is_authenticated %}
-                <li><a href="{% url 'app:logout' %}" class="nav-link px-2 link-secondary">Logout</a></li>
+                <li><a href="{% url 'auth_logout' %}?next={% url 'app:homepage' %}" class="nav-link px-2 link-secondary">Logout</a></li
                 {% else %}
-                <li><a href="{% url 'app:login' %}" class="nav-link px-2 link-secondary">Login/Signup</a></li>
+                <li><a href="{% url 'auth_login' %}" class="nav-link px-2 link-secondary">Login</a></li>
+		<li><a href="{% url 'registration_register' %}" class="nav-link px-2 link-secondary">Signup</a></li>
                 {% endif %}
-                <li><a href="{% url 'app:about' %}" class="nav-link px-2 link-body-emphasis">About</a></li>
                 <li><a href="{% url 'app:contactus' %}" class="nav-link px-2 link-body-emphasis">Contact us</a></li>
             </ul>
 
