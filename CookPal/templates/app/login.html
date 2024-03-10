@@ -1,3 +1,4 @@
+
 {% extends 'app/base.html' %}
 {% load staticfiles %}
 
@@ -12,169 +13,29 @@
     <div class="container">
         <div class="d-flex">
             <div class="container">
-                <form class="mb-5 mt-5 mx-5 my-5" id="loginForm" method="post" action="{% url 'app:login' %}">
-                    {% csrf_token %}
+                <form class="mb-5 mt-5 mx-5 my-5">
                     <div>
                         <label for="login-username" class="form-label">Username</label>
                         <input type="text" class="form-control" id="login-username" placeholder="Enter username" name="login-username">
-                        <div id="login-username-error" class="error"></div>
                     </div>
 
                     <div>
                         <label for="login-password" class="form-label mt-3">Password</label>
                         <input type="password" class="form-control" id="login-password" placeholder="Enter password" name="login-password">
-                        <div id="login-password-error" class="error"></div>
                     </div>
                     <div class="d-flex justify-content-center align-items-center">
                         <button type="submit" class="btn btn-primary mb-3 mt-3">Log in</button>
                     </div>
-                </form>
-            </div>
+                    <a href="#" class="icon-link gap-1 icon-link-hover stretched-link d-flex justify-content-center">
+                        Don't have an account? Sign up here...
+                    </a>
 
-            <div class="vr"></div>
-            <div class="container">
-                <form class="mb-5 mt-5 mx-5 my-5" id="signupForm" method="post" action="{% url 'app:login' %}">
-                    {% csrf_token %}
-                    <div>
-                        <label for="Signup-username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="Signup-username" placeholder="Enter username" name="Signup-username">
-                        <div id="Signup-username-error" class="error"></div>
-                    </div>
-
-                    <div>
-                        <label for="Signup-password" class="form-label mt-3">Password</label>
-                        <input type="password" class="form-control" id="Signup-password" placeholder="Enter password" name="Signup-password">
-                        <div id="Signup-password-error" class="error"></div>
-                    </div>
-
-                    <div>
-                        <label for="Confirm-password" class="form-label mt-3">Confirm Password</label>
-                        <input type="password" class="form-control" id="Confirm-password" placeholder="Confirm password" name="Confirm-password">
-                        <div id="Confirm-password-error" class="error"></div>
-                    </div>
-
-                    <div>
-                        <label for="Signup-Nickname" class="form-label mt-3">Nickname</label>
-                        <input type="text" class="form-control" id="Signup-Nickname" placeholder="Enter nickname" name="Signup-Nickname">
-                        <div id="Signup-Nickname-error" class="error"></div>
-                    </div>
-
-                    <div>
-                        <label for="email" class="form-label mt-3">Email</label>
-                        <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
-                        <div id="email-error" class="error"></div>
-                    </div>
-
-                    <div>
-                        <label for="phone" class="form-label mt-3">Phone</label>
-                        <input type="number" class="form-control" id="phone" placeholder="Enter phone" name="phone">
-                        <div id="phone-error" class="error"></div>
-                    </div>
-
-                    <div class="d-flex justify-content-center align-items-center">
-                        <button type="submit" class="btn btn-primary mb-3 mt-3">Create Account</button>
-                    </div>
                 </form>
             </div>
         </div>
     </div>
-
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">
-        document.addEventListener("DOMContentLoaded", function() {
-            const loginForm = document.getElementById("loginForm");
-            loginForm.addEventListener("submit", function(event) {
-                event.preventDefault();
-
-                // Clear previous errors
-                clearErrors();
-
-                // Input validation for login form
-                const isUsernameValid = validateField("login-username");
-                const isPasswordValid = validateField("login-password");
-
-                if (isUsernameValid && isPasswordValid) {
-                    const username = document.getElementById("login-username").value;
-                    const password = document.getElementById("login-password").value;
-                    console.log("Login Form Submitted");
-                    console.log("Username:", username, "Password:", password);
-                    submitLoginRequest(username, password)
-                }
-            });
-
-            const signupForm = document.getElementById("signupForm");
-            signupForm.addEventListener("submit", function(event) {
-                event.preventDefault();
-
-                // Clear previous errors
-                clearErrors();
-
-                let isValid = true;
-
-                // Input validation
-                isValid &= validateField("Signup-username");
-                isValid &= validateField("Signup-password");
-                isValid &= validateField("Signup-Nickname");
-                isValid &= validateField("email", true);
-                isValid &= validateField("phone");
-
-                // Password match check
-                const password = document.getElementById("Signup-password").value;
-                const confirmPassword = document.getElementById("Confirm-password").value;
-                if (password !== confirmPassword) {
-                    displayError("Confirm-password", "Passwords do not match.");
-                    isValid = false;
-                }
-
-                if (isValid) {
-                    const username = document.getElementById("Signup-username").value;
-                    const nickname = document.getElementById("Signup-Nickname").value;
-                    const email = document.getElementById("email").value;
-                    const phone = document.getElementById("phone").value;
-                    
-                    console.log("Signup Form Submitted");
-                    console.log("Username:", username, "Password:", password, "Nickname:", nickname, "Email:", email, "Phone:", phone);
-                }
-            });
-
-            function submitLoginRequest(username, password) {
-                console.log("attempting to submit form")
-                $.ajax({
-                    type: "POST",
-                    headers: {
-                        'Content-Type':'application/json',
-                        'X-CSRFToken': getCookie('csrftoken')
-                    },
-                    url: "login/",
-                    data: JSON.stringify({'Username': username, 'Password': password}),
-                    success: function(json) {
-                    console.log("successful request")
-                    }
-                })
-            }
-
-            function validateField(fieldId, isEmail=false) {
-                const value = document.getElementById(fieldId).value;
-                if (!value) {
-                    displayError(fieldId, "This field cannot be empty.");
-                    return false;
-                } else if (isEmail && (!value.includes("@") || !value.endsWith(".com"))) {
-                    displayError(fieldId, "Invalid email format.");
-                    return false;
-                }
-                return true;
-            }
-
-            function displayError(fieldId, message) {
-                const errorElement = document.getElementById(fieldId + "-error");
-                errorElement.textContent = message;
-            }
-
-            function clearErrors() {
-                const errorElements = document.querySelectorAll(".error");
-                errorElements.forEach(error => {
-                    error.textContent = "";
-                });
-            }
-        });
-    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
 {% endblock %}
+
