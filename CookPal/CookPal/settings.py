@@ -139,3 +139,11 @@ LOGIN_URL = 'auth_login'
 
 #used to add additional attribute to the base User model
 AUTH_PROFILE_MODULE = 'app.UserAccount'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'xxxxxx@gmail.com'
+EMAIL_HOST_PASSWORD = 'xxxxx'

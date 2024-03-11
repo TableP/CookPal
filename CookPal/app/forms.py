@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import UserAccount, Site_Admin, Collection, Recipe, Comment, Rating, Reported_Recipe
+from .models import UserAccount, Site_Admin, Collection, Recipe, Comment, Rating, Reported_Recipe, Support
 
 class UserAccountForm(forms.ModelForm):
     class Meta:
@@ -36,3 +36,8 @@ class ReportedRecipeForm(forms.ModelForm):
     class Meta:
         model = Reported_Recipe
         fields = ['ReportID', 'User', 'Customer_Support', 'ReportedRecipe', 'ReportedRecipeDescription', 'ReportedDate']
+
+class SupportForm(forms.ModelForm):
+    class Meta:
+        model = Support
+        fields = ['SupportID', 'Title', 'Name', 'Email', 'Phone', 'SupportDescription', 'SupportDate']
