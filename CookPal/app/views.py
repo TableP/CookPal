@@ -380,4 +380,42 @@ class RecipeView(View):
 class ReportView(View):
     def get(self, request):
         return render(request, 'app/report.html')
+
+class ProfileView:
+    def get(self, request, username):
+        user = User.objects.get(username=request.user.username)
+        userAccount = UserAccount.objects.get(username=user)
+        username = userAccount.Nickname
+        email = userAccount.Email
+
+        context = {"username": username,
+                   "email": email}
+
+        return render(request, 'app/profile', context=context)
+
+    def post(self, request, incomingUsername):
+        user = User.objects.get(username=request.user.username)
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        userAccount = UserAccount.objects.get(username=user)
+
+        if username is not None:
+            userAccount(Nickname = username)
+
+        if email is not None:
+            userAccount(Email = email)
+
+        context = {"username": username,
+                   "email": email}
+
+        if request.is_ajax():
+            return JsonResponse({
+                'success': True,
+                'url': reverse('app:profile', kwargs={'username': username})
+            })
+
+        return render(request, 'app/profile', context=context)
+
+
+
 # Create your views here.

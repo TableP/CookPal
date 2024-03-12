@@ -18,4 +18,5 @@ urlpatterns = [
     path('account-support/', views.AccountSupportView.as_view(), name='accountsupport'),
     path('create/', views.CreateView.as_view(), name='create'),
     path('recipe/<recipeid>/', views.RecipeView.as_view(), name='recipe'),
+    path('profile/<username>/', views.ProfileView.as_view(), name='profile'),
 ]
