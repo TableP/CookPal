@@ -116,6 +116,19 @@ class Reported_Recipe(models.Model):
     # Get the primary key
     def __str__(self):
         return self.ReportID
+    
+class Support(models.Model):
+    # SupportID is the primary key
+    SupportID = models.CharField(max_length=30, primary_key=True)
+    Title = models.CharField(max_length=10)
+    Name = models.CharField(max_length=30)
+    Email = models.EmailField()
+    Phone = models.CharField(max_length=30)
+    SupportDescription = models.CharField(max_length=200)
+    SupportDate = models.DateTimeField()
+    # Get the primary key
+    def __str__(self):
+        return self.SupportID
 
 def uniqueId(String, Model):
     # The String can be the basic information of object you get now, ex: username, email, etc.

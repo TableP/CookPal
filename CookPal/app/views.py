@@ -8,6 +8,8 @@ from django.urls import reverse
 from django.views import View
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+from .models import uniqueId
 
 #for random id gen
 import hashlib
@@ -16,9 +18,9 @@ import random
 
 
 #currently importing all for simplicity
-from app.models import UserAccount, User, Recipe
+from app.models import UserAccount, User, Recipe, Support
 
-from app.forms import RecipeForm
+from app.forms import RecipeForm, SupportForm
 
 from app import models
 
@@ -117,7 +119,26 @@ class LogoutView(View):
 class AccountSupportView(View):
     def get(self, request):
         return render(request, 'app/accountsupport.html')
-
+    def post(self, request):
+        email = request.POST.get('email')
+        title = request.POST.get('title')
+        name = request.POST.get('name')
+        phone = request.POST.get('phone')
+        problemDescription = request.POST.get('problemDescription')
+        Support = Support(SupportID = uniqueId(title + name + email, Support),
+                        Title=title, Name=name, Email=email, Phone=phone, 
+                        SupportDescription=problemDescription, 
+                        SupportDate=datetime.datetime.now())
+        Support.save()
+        if email is not None:
+            send_mail(
+                'Complaint Received',
+                'Thank you for your complaint, we will look into it as soon as possible.',
+                'xxxxx@gmail.com',
+                [email],
+                fail_silently=False, # if have fault, don't report to the service
+            )
+        return render(request, 'app/accountsupport.html')
 
 class CreateView(View):
 
@@ -186,3 +207,6 @@ class ReportView(View):
     def get(self, request):
         return render(request, 'app/report.html')
 # Create your views here.
+
+    
+       
