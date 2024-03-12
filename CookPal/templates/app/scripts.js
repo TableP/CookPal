@@ -65,3 +65,30 @@ document.addEventListener('DOMContentLoaded', function() {
       // I don't think we need this
     });
   }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const paginationLinks = document.querySelectorAll('.pagination .page-link');
+
+    paginationLinks.forEach(function(link) {
+        link.addEventListener('click', function(event) {
+            // prevent default
+            event.preventDefault();
+
+            // remove active
+            document.querySelector('.pagination .active').classList.remove('active');
+
+            // change to active
+            const parentListItem = this.parentNode;
+            if (parentListItem.tagName === 'LI') {
+                parentListItem.classList.add('active');
+                // update aria-current if needed
+                if (this.tagName === 'A') {
+                    this.parentNode.innerHTML = `<span class="page-link">${this.textContent}</span>`;
+                }
+            }
+
+
+            // can use AJAX to load page contect
+        });
+    });
+});
