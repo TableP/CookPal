@@ -11,13 +11,12 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from .models import uniqueId
 
-#for random id gen
+# for random id gen
 import hashlib
 import time
 import random
 
-
-#currently importing all for simplicity
+# currently importing all for simplicity
 from app.models import UserAccount, User, Recipe, Support
 
 from app.forms import RecipeForm, SupportForm
@@ -30,17 +29,16 @@ class HomepageView(View):
         allRecipes = Recipe.objects.all()
         context = {"recipes": allRecipes}
 
-        return render(request, 'app/homepage.html', context = context)
+        return render(request, 'app/homepage.html', context=context)
 
-    #implement logic here - should be easy
+    # implement logic here - should be easy
     def post(self, request):
-        #we take this to another html?
+        # we take this to another html?
         print(request.POST.get('search-submit'))
         print(request.POST.get('type-submit'))
         print(request.POST.get('origin-submit'))
         print(request.body)
         return render(request, 'app/homepage.html')
-
 
 
 class AboutView(View):
@@ -52,11 +50,46 @@ class ContactUsView(View):
     def get(self, request):
         return render(request, 'app/contactus.html')
 
+
 class GeneralSupportView(View):
     def get(self, request):
         return render(request, 'app/generalsupport.html')
 
-#Made changes to the View page
+    def post(self, request):
+        def post(self, request):
+            print("Working")
+            email = request.POST.get('email')
+            title = request.POST.get('title')
+            name = request.POST.get('name')
+            phone = request.POST.get('phone')
+            problemDescription = request.POST.get('problemDescription')
+
+            print(email + title + name + phone + problemDescription)
+
+            newSupport = Support(SupportID=uniqueId(title + name + email, Support),
+                                 Title=title, Name=name, Email=email, Phone=phone,
+                                 SupportDescription=problemDescription,
+                                 SupportDate=datetime.datetime.now())
+            newSupport.save()
+            if email is not None:
+                send_mail(
+                    'General Request Received',
+                    'Thank you for your request, we will look into it as soon as possible.',
+                    'xxxxx@gmail.com',
+                    [email],
+                    fail_silently=False,  # if have fault, don't report to the service
+                )
+
+            # use this to redirect user to maybe a thank you for submitting problem html
+            if request.is_ajax():
+                return JsonResponse({
+                    'success': True,
+                    'url': reverse('app:homepage')
+                })
+            return render(request, 'app/generalsupport.html')
+
+
+# Made changes to the View page
 class LoginView(View):
     def get(self, request):
         return render(request, 'app/login.html')
@@ -98,16 +131,47 @@ class LoginView(View):
                 return HttpResponse("INVALID LOGIN")
 
             return render(request, 'app/login.html')
+
+
 class ReportView(View):
     def get(self, request):
         return render(request, 'app/report.html')
+
 
 class TechnicalSupportView(View):
     def get(self, request):
         return render(request, 'app/technicalsupport.html')
 
     def post(self, request):
-        print(request.body)
+        print("Working")
+        email = request.POST.get('email')
+        title = request.POST.get('title')
+        name = request.POST.get('name')
+        phone = request.POST.get('phone')
+        problemDescription = request.POST.get('problemDescription')
+
+        print(email + title + name + phone + problemDescription)
+
+        newSupport = Support(SupportID=uniqueId(title + name + email, Support),
+                             Title=title, Name=name, Email=email, Phone=phone,
+                             SupportDescription=problemDescription,
+                             SupportDate=datetime.datetime.now())
+        newSupport.save()
+        if email is not None:
+            send_mail(
+                'Technical Support Request Received',
+                'Thank you for your request, we will look into it as soon as possible.',
+                'xxxxx@gmail.com',
+                [email],
+                fail_silently=False,  # if have fault, don't report to the service
+            )
+
+        # use this to redirect user to maybe a thank you for submitting problem html
+        if request.is_ajax():
+            return JsonResponse({
+                'success': True,
+                'url': reverse('app:homepage')
+            })
         return render(request, 'app/technicalsupport.html')
 
 
@@ -116,32 +180,45 @@ class LogoutView(View):
         logout(request)
         return render(request, 'app/homepage.html')
 
+
 class AccountSupportView(View):
     def get(self, request):
         return render(request, 'app/accountsupport.html')
+
     def post(self, request):
+        print("Working")
         email = request.POST.get('email')
         title = request.POST.get('title')
         name = request.POST.get('name')
         phone = request.POST.get('phone')
         problemDescription = request.POST.get('problemDescription')
-        Support = Support(SupportID = uniqueId(title + name + email, Support),
-                        Title=title, Name=name, Email=email, Phone=phone, 
-                        SupportDescription=problemDescription, 
-                        SupportDate=datetime.datetime.now())
-        Support.save()
+
+        print(email + title + name + phone + problemDescription)
+
+        newSupport = Support(SupportID=uniqueId(title + name + email, Support),
+                             Title=title, Name=name, Email=email, Phone=phone,
+                             SupportDescription=problemDescription,
+                             SupportDate=datetime.datetime.now())
+        newSupport.save()
         if email is not None:
             send_mail(
-                'Complaint Received',
-                'Thank you for your complaint, we will look into it as soon as possible.',
+                'Account Support Request Received',
+                'Thank you for your request, we will look into it as soon as possible.',
                 'xxxxx@gmail.com',
                 [email],
-                fail_silently=False, # if have fault, don't report to the service
+                fail_silently=False,  # if have fault, don't report to the service
             )
+
+        # use this to redirect user to maybe a thank you for submitting problem html
+        if request.is_ajax():
+            return JsonResponse({
+                'success': True,
+                'url': reverse('app:homepage')
+            })
         return render(request, 'app/accountsupport.html')
 
-class CreateView(View):
 
+class CreateView(View):
 
     def get(self, request):
         return render(request, 'app/create.html')
@@ -155,12 +232,11 @@ class CreateView(View):
 
         user = User.objects.get(username=request.user.username)
 
-
         newRecipe = Recipe(User=UserAccount.objects.get(user=request.user),
-                            RecipeID = recipe_name, Title = recipe_name, Ingredients = ingredients,
-                           Type = type, Origin = origin,
-                           Instructions = instruction, PostDate = datetime.datetime.now(),
-                           UpdateDate = datetime.datetime.now())
+                           RecipeID=recipe_name, Title=recipe_name, Ingredients=ingredients,
+                           Type=type, Origin=origin,
+                           Instructions=instruction, PostDate=datetime.datetime.now(),
+                           UpdateDate=datetime.datetime.now())
 
         uniqueID = models.uniqueId(request.user.username + "-" + recipe_name, newRecipe)
         print(uniqueID)
@@ -168,7 +244,7 @@ class CreateView(View):
         newRecipe.save()
         print("saving recipe")
         print(newRecipe.RecipeID)
-        #due to ajax sending json we must respond with json when attempting a redirect
+        # due to ajax sending json we must respond with json when attempting a redirect
         if request.is_ajax():
             return JsonResponse({
                 'success': True,
@@ -177,36 +253,37 @@ class CreateView(View):
 
         return redirect(reverse('app:recipe', kwargs={'recipeid': newRecipe.RecipeID}))
 
+
 class RecipeView(View):
 
-    #method for getting recipe details based on the url
+    # method for getting recipe details based on the url
     def get_recipe_details(self, recipeid):
         try:
-            recipe = Recipe.objects.get(RecipeID = recipeid)
+            recipe = Recipe.objects.get(RecipeID=recipeid)
 
         except Recipe.DoesNotExist:
             return None
 
         return recipe
+
     def get(self, request, recipeid):
         print("RECIPE PAGE")
-        #grabbing the id from the url from which we can match recipe details via the method we created earlier
+        # grabbing the id from the url from which we can match recipe details via the method we created earlier
         currentRecipe = self.get_recipe_details(recipeid)
 
-        #if no valid recipe is found then this response is given
+        # if no valid recipe is found then this response is given
         if currentRecipe is None:
             return HttpResponse("INVALID RECIPE")
 
         context = {'recipe_name': currentRecipe.Title,
                    'ingredients': currentRecipe.Ingredients,
-                   'instructions': currentRecipe.Instructions}
+                   'instructions': currentRecipe.Instructions,
+                   'recipeID': currentRecipe.RecipeID}
         print(context)
         return render(request, 'app/recipe.html', context=context)
+
 
 class ReportView(View):
     def get(self, request):
         return render(request, 'app/report.html')
 # Create your views here.
-
-    
-       
