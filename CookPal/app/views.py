@@ -229,7 +229,7 @@ class TechnicalSupportView(View):
             send_mail(
                 'Technical Support Request Received',
                 'Thank you for your request, we will look into it as soon as possible.',
-                'xxxxx@gmail.com',
+                'cookpal27@gmail.com',
                 [email],
                 fail_silently=False,  # if have fault, don't report to the service
             )
@@ -272,7 +272,7 @@ class AccountSupportView(View):
             send_mail(
                 'Account Support Request Received',
                 'Thank you for your request, we will look into it as soon as possible.',
-                'xxxxx@gmail.com',
+                'cookpal27@gmail.com',
                 [email],
                 fail_silently=False,  # if have fault, don't report to the service
             )
