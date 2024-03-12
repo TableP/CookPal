@@ -6,8 +6,13 @@ from django.views import View
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.views import View
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
+
+#for random id gen
+import hashlib
+import time
+import random
 
 
 #currently importing all for simplicity
@@ -15,11 +20,17 @@ from app.models import UserAccount, User, Recipe
 
 from app.forms import RecipeForm
 
+from app import models
+
 
 class HomepageView(View):
     def get(self, request):
-        return render(request, 'app/homepage.html')
+        allRecipes = Recipe.objects.all()
+        context = {"recipes": allRecipes}
 
+        return render(request, 'app/homepage.html', context = context)
+
+    #implement logic here - should be easy
     def post(self, request):
         #we take this to another html?
         print(request.POST.get('search-submit'))
@@ -109,6 +120,8 @@ class AccountSupportView(View):
 
 
 class CreateView(View):
+
+
     def get(self, request):
         return render(request, 'app/create.html')
 
@@ -121,14 +134,26 @@ class CreateView(View):
 
         user = User.objects.get(username=request.user.username)
 
+
         newRecipe = Recipe(User=UserAccount.objects.get(user=request.user),
                             RecipeID = recipe_name, Title = recipe_name, Ingredients = ingredients,
                            Type = type, Origin = origin,
                            Instructions = instruction, PostDate = datetime.datetime.now(),
                            UpdateDate = datetime.datetime.now())
+
+        uniqueID = models.uniqueId(request.user.username + "-" + recipe_name, newRecipe)
+        print(uniqueID)
+        newRecipe.RecipeID = uniqueID
         newRecipe.save()
         print("saving recipe")
-        #someone test why this wont work --
+        print(newRecipe.RecipeID)
+        #due to ajax sending json we must respond with json when attempting a redirect
+        if request.is_ajax():
+            return JsonResponse({
+                'success': True,
+                'url': reverse('app:recipe', kwargs={'recipeid': newRecipe.RecipeID})
+            })
+
         return redirect(reverse('app:recipe', kwargs={'recipeid': newRecipe.RecipeID}))
 
 class RecipeView(View):

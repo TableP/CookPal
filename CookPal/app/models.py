@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import User
 import hashlib
@@ -125,7 +127,7 @@ def uniqueId(String, Model):
 
     # The 1-20 is the hash of string
     id20 = hashlib.md5(String.encode()).hexdigest()[:20]
-    time = str(time.time())
+    time = str(datetime.time())
     # The 21-28 is the hash of current time
     id8 = hashlib.md5(time.encode()).hexdigest()[-8:]
     # The 29-30 is the random character
@@ -135,8 +137,14 @@ def uniqueId(String, Model):
     # Combine the 3 parts to get the unique id
     id = id20 + id8 + id2
     PrimaryKey = Model._meta.pk.name
-    if Model.objects.filter(**{PrimaryKey : id}).exists():
-        return uniqueId(String, Model)  
-    else:
+    #if Model.objects.filter(**{PrimaryKey : id}).exists():
+        #return uniqueId(String, Model)
+
+    #checks if a recipe with that id already exists
+    try:
+        recipe = Recipe.objects.get(RecipeID=id)
+        return uniqueId(String, Model)
+    except Recipe.DoesNotExist:
         return id
+
 

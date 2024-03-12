@@ -124,8 +124,11 @@
                    instructions: instructions},
                    dataType: "json",
                    enctype: 'multipart/form-data',
-               })
-
+               }).done(function(data){
+                if(data.success){
+                window.location.href = data.url;
+                }
+                });
 
 
               }
