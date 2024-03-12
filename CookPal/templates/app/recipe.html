@@ -9,6 +9,16 @@
     <link rel="stylesheet" href="style.css">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
       <script>
+
+      /*
+      I need:
+      recipe comment
+      recipe rating
+      parent comment id if present
+      recipe id
+      rating number
+      */
+
       document.addEventListener('DOMContentLoaded', function() {
           document.querySelector('form').addEventListener('submit', function(e) {
               e.preventDefault();
@@ -260,21 +270,50 @@
                 <div class="p-5 mt-1 col-md-2"></div>
                 <div class="p-5 mt-1 col-md-10"><h3>Comments</h3></div>
                 <div class="p-5 mt-1 col-md-2"></div>
+
+                {% if comments %}
+
+                {% for comment in comments %}
                 <div class="p-5 mt-1 col-md-8 bg-body-tertiary rounded-3">
-                    <h5>Example User</h5>
+<!--                    This part really needs testing for grabbing name from user from comment-->
+                    <h5>comment.User.Name</h5>
                     <span class="star" data-value="1">☆</span>
                     <span class="star" data-value="2">☆</span>
                     <span class="star" data-value="3">☆</span>
                     <span class="star" data-value="4">☆</span>
                     <span class="star" data-value="5">☆</span>
-                    <p class="fs-6">Comments here... Comments here... Comments here... Comments here... </p>
-                    <p class="dateInComment">Date & Time</p>
+                    <p class="fs-6">comment.Comment </p>
+                    <p class="dateInComment">comment.CommentDate</p>
                     <button type="button" class="replybtn btn-link" data-comment-id="comment1-reply">Reply</button>
                     <div class="reply-form" id="comment1-reply" style="display:none;">
                         <textarea placeholder="Write reply..."></textarea>
                         <button class="submit-reply">Submit</button>
                     </div>
                 </div>
+<!--                need someone to help write sub comments - the formatting frontend wise-->
+                {% endfor %}
+                {% else %}
+                <strong>No Comments available</strong>
+                {% endif %}
+
+<!--                <div class="p-5 mt-1 col-md-8 bg-body-tertiary rounded-3">-->
+<!--                    <h5>Example User</h5>-->
+<!--                    <span class="star" data-value="1">☆</span>-->
+<!--                    <span class="star" data-value="2">☆</span>-->
+<!--                    <span class="star" data-value="3">☆</span>-->
+<!--                    <span class="star" data-value="4">☆</span>-->
+<!--                    <span class="star" data-value="5">☆</span>-->
+<!--                    <p class="fs-6">Comments here... Comments here... Comments here... Comments here... </p>-->
+<!--                    <p class="dateInComment">Date & Time</p>-->
+<!--                    <button type="button" class="replybtn btn-link" data-comment-id="comment1-reply">Reply</button>-->
+<!--                    <div class="reply-form" id="comment1-reply" style="display:none;">-->
+<!--                        <textarea placeholder="Write reply..."></textarea>-->
+<!--                        <button class="submit-reply">Submit</button>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+
+
                 <div class="p-5 mt-1 col-md-2"></div>
             </div>
         </div>

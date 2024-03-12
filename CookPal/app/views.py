@@ -17,7 +17,7 @@ import time
 import random
 
 # currently importing all for simplicity
-from app.models import UserAccount, User, Recipe, Support
+from app.models import UserAccount, User, Recipe, Support, Reported_Recipe, Comment, Rating
 
 from app.forms import RecipeForm, SupportForm
 
@@ -31,14 +31,58 @@ class HomepageView(View):
 
         return render(request, 'app/homepage.html', context=context)
 
-    # implement logic here - should be easy
     def post(self, request):
         # we take this to another html?
         print(request.POST.get('search-submit'))
         print(request.POST.get('type-submit'))
         print(request.POST.get('origin-submit'))
         print(request.body)
-        return render(request, 'app/homepage.html')
+
+        searchTitle = request.Post.get('search-submit')
+        searchType = request.Post.get('type-submit')
+        originType = request.Post.get('origin-submit')
+
+        #allows user to not submit all parameters and still search for recipes
+        if searchType and searchTitle is None:
+            searchRecipes = Recipe.objects.filter(
+                Origin=originType
+            )
+
+        elif searchTitle and originType is None:
+            searchRecipes = Recipe.objects.filter(
+                Type=searchType
+            )
+
+        elif searchType and originType is None:
+            searchRecipes = Recipe.objects.filter(
+                Title=searchTitle,
+            )
+
+        elif searchType is None:
+            searchRecipes = Recipe.objects.filter(
+                Title=searchTitle,
+                Origin=originType
+            )
+        elif originType is None:
+            searchRecipes = Recipe.objects.filter(
+                Title=searchTitle,
+                Type=searchType
+            )
+
+        elif searchTitle is None:
+            searchRecipes = Recipe.objects.filter(
+                Type=searchType,
+                Origin=originType
+            )
+        else:
+            searchRecipes = Recipe.objects.filter(
+                Title=searchTitle,
+                Type=searchType,
+                Origin=originType
+            )
+
+        context = {"recipes": searchRecipes}
+        return render(request, 'app/homepage.html', context=context)
 
 
 class AboutView(View):
@@ -137,6 +181,30 @@ class ReportView(View):
     def get(self, request):
         return render(request, 'app/report.html')
 
+    def post(self, request, recipeID):
+        reportReason = request.POST.get('reportReason')
+        reportEmail = reportReason.POST.get('reportEmail')
+        reportId = uniqueId(reportReason + reportEmail)
+        reportedRecipe = Recipe.objects.get(RecipeID = recipeID)
+        user = User.objects.get(username=request.user.username)
+
+        newReport = Reported_Recipe(ReportID = reportId,
+                                    User = user,
+                                    Reported_Recipe = reportedRecipe,
+                                    ReportedRecipeDescription = reportReason,
+                                    ReportedDate = datetime.datetime.now())
+
+        newReport.save()
+
+        if request.is_ajax():
+            return JsonResponse({
+                'success': True,
+                'url': reverse('app:homepage')
+            })
+
+        return render(request, 'app/report.html')
+
+
 
 class TechnicalSupportView(View):
     def get(self, request):
@@ -229,7 +297,6 @@ class CreateView(View):
         origin = request.POST.get('origin')
         ingredients = request.POST.get('ingredients')
         instruction = request.POST.get('instructions')
-
         user = User.objects.get(username=request.user.username)
 
         newRecipe = Recipe(User=UserAccount.objects.get(user=request.user),
@@ -282,6 +349,33 @@ class RecipeView(View):
         print(context)
         return render(request, 'app/recipe.html', context=context)
 
+    def post(self, request, recipeID):
+        #logic for comments and ratings - needs testing
+        recipeComment = request.POST.get('recipeComment')
+        recipeRating = request.POST.get('recipeRating')
+        parentCommentID = request.POST.get('parentCommentID')
+        commentDate = datetime.datetime.now()
+        recipe = Recipe.objects.get(RecipeID = recipeID)
+        ratingNumber = request.POST.get('recipeRating')
+        user = User.objects.get(username=request.user.username)
+
+        newComment = Comment(CommentID = uniqueId(recipe + recipeComment + commentDate),
+                             User = user,
+                             Recipe = recipe,
+                             Comment = recipeComment,
+                             CommendDate = commentDate)
+
+        if parentCommentID is not None:
+            newComment(ParentCommendID = parentCommentID)
+
+        newComment.save()
+
+        newRating = Rating(RatingID = uniqueId(recipe + recipeComment + recipeRating + commentDate),
+                           User = user,
+                           Comment = newComment,
+                           Recipe = recipe,
+                           RatingNumber = ratingNumber)
+        newRating.save()
 
 class ReportView(View):
     def get(self, request):
