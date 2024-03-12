@@ -92,3 +92,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+function checkPasswords() {
+  var password = document.getElementById('change-password').value;
+  var confirmPassword = document.getElementById('change-password-confirm').value;
+  var message = document.getElementById('checkPassword');
+
+  if (password === confirmPassword) {
+    message.style.color = 'green';
+    message.textContent = "Passwords match.";
+    // logic for matched password
+  } else {
+    message.style.color = 'red';
+    message.textContent = "Passwords do not match.";
+    confirmPassword.style.borderColor = 'red';
+    // logic for not matched password
+  }
+}

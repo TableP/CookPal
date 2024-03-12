@@ -9,6 +9,11 @@
     color: gold;
   }
 
+.starInComment {
+  cursor: pointer;
+  color: gold;
+}
+
 .dateInComment{
     color:grey;
 }
@@ -28,5 +33,14 @@ ul.no-list-style{
 }
 
 .user-comment img{
+  margin-right: 10px;
+}
+
+.user-recipe{
+  display: flex;
+  align-items: center;
+}
+
+.user-recipe img{
   margin-right: 10px;
 }
