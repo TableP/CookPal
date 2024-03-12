@@ -381,7 +381,7 @@ class ReportView(View):
     def get(self, request):
         return render(request, 'app/report.html')
 
-class ProfileView:
+class ProfileView(View):
     def get(self, request, username):
         user = User.objects.get(username=request.user.username)
         userAccount = UserAccount.objects.get(username=user)
