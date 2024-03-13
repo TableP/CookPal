@@ -10,6 +10,74 @@
 {% endblock %}
 
 {% block body_block %}
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+      console.log("DOM content loaded");
+      console.log("started");
+       function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+          }
+                var csrftoken = getCookie('csrftoken');
+               function csrfSafeMethod(method) {
+                // these HTTP methods do not require CSRF protection
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+                }
+
+                $.ajaxSetup({
+                   beforeSend: function(xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                            }
+                        }
+                    })
+                    console.log("trying to link button");
+      const addToFavourite = document.getElementById("addToFavourite");
+          addToFavourite.addEventListener('click', function(e) {
+            console.log("linked button");
+              e.preventDefault();
+                sendRequestToBackend();
+              });
+
+
+
+              function sendRequestToBackend(){
+              let recipeID = "{{ recipeID }}";
+              console.log("Value of test1:", recipeID);
+                let url = "/recipe/" + recipeID + "/";
+                console.log("Constructed URL:", url);
+
+                $.ajax({
+                   type: 'POST',
+                   url: url,
+                   data:{
+                   buttonType: "True"},
+                   dataType: "json",
+                   enctype: 'multipart/form-data',
+               }).done(function(data){
+                if(data.success){
+                window.location.href = data.url;
+                }
+                });
+
+
+
+              }
+            });
+    </script>
       
 
       <main>
@@ -61,18 +129,21 @@
             <div class="row align-items-md-stretch">
                 <div class="col-md-2">
                     <div class="mt-4 h-100 p-5 rounded-3">
-                        <button type="button" class="btn btn-outline-success">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-suit-heart-fill" viewBox="0 0 16 16">
-                                <path d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1"></path>
-                            </svg>
-                            Add to Favourite
-                        </button>
+
 
                         <button type="button" class="btn btn-primary mt-5" data-bs-toggle="modal" data-bs-target="#shareModal">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share-fill" viewBox="0 0 16 16">
                                 <path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5"></path>
                             </svg>
                             Share to Others
+                        </button>
+
+
+                        <button type="button" class="btn btn-outline-success" id="addToFavourite">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-suit-heart-fill" viewBox="0 0 16 16">
+                                <path d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1"></path>
+                            </svg>
+                            Add to Favourite
                         </button>
 
                         <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
@@ -107,7 +178,7 @@
                         </div>
                         
 
-                        <button type="button" class="btn btn-outline-danger mt-5">
+                        <button type="button" class="btn btn-outline-danger mt-5" id="report">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shield-fill-exclamation" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.8 11.8 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7 7 0 0 0 1.048-.625 11.8 11.8 0 0 0 2.517-2.453c1.678-2.195 3.061-5.513 2.465-9.99a1.54 1.54 0 0 0-1.044-1.263 63 63 0 0 0-2.887-.87C9.843.266 8.69 0 8 0m-.55 8.502L7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0M8.002 12a1 1 0 1 1 0-2 1 1 0 0 1 0 2"></path>
                             </svg>

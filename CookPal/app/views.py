@@ -17,7 +17,7 @@ import time
 import random
 
 # currently importing all for simplicity
-from app.models import UserAccount, User, Recipe, Support, Reported_Recipe, Comment, Rating, Favourites
+from app.models import UserAccount, User, Recipe, Support, Reported_Recipe, Comment, Rating
 
 
 
@@ -365,7 +365,7 @@ class RecipeView(View):
             print(recipeuserAccount)
 
 
-        except recipeuser.DoesNotExist:
+        except recipeuserAccount.DoesNotExist:
             testuser = User.objects.create_user(username='testuser', password='12345')
             user_account = UserAccount.objects.create(user=testuser,
                                                     Email='testuser@example.com',
@@ -390,33 +390,42 @@ class RecipeView(View):
         print(context)
         return render(request, 'app/recipe.html', context=context)
 
-    def post(self, request, recipeID):
-        #logic for comments and ratings - needs testing
-        recipeComment = request.POST.get('recipeComment')
-        recipeRating = request.POST.get('recipeRating')
-        parentCommentID = request.POST.get('parentCommentID')
-        commentDate = datetime.datetime.now()
-        recipe = Recipe.objects.get(RecipeID = recipeID)
-        ratingNumber = request.POST.get('recipeRating')
-        user = User.objects.get(username=request.user.username)
+    def post(self, request, recipeid):
+        print("test favourite")
 
-        newComment = Comment(CommentID = uniqueId(recipe + recipeComment + commentDate),
-                             User = user,
-                             Recipe = recipe,
-                             Comment = recipeComment,
-                             CommendDate = commentDate)
 
-        if parentCommentID is not None:
-            newComment(ParentCommendID = parentCommentID)
+        # newComment = Comment(CommentID = uniqueId(recipe + recipeComment + commentDate),
+        #                      User = user,
+        #                      Recipe = recipe,
+        #                      Comment = recipeComment,
+        #                      CommendDate = commentDate)
+        #
+        # if parentCommentID is not None:
+        #     newComment(ParentCommendID = parentCommentID)
+        #
+        # newComment.save()
+        #
+        # newRating = Rating(RatingID = uniqueId(recipe + recipeComment + recipeRating + commentDate),
+        #                    User = user,
+        #                    Comment = newComment,
+        #                    Recipe = recipe,
+        #                    RatingNumber = ratingNumber)
+        # newRating.save()
+        buttonType = request.POST.get('buttonType')
+        currentRecipe = self.get_recipe_details(recipeid)
+        if "True" in buttonType:
+            user = User.objects.get(username=request.user.username)
+            userAccount = UserAccount.objects.get(user=user)
+            userFavourites = userAccount.Favourites
+            userFavourites.add(currentRecipe)
+            userAccount.save()
 
-        newComment.save()
 
-        newRating = Rating(RatingID = uniqueId(recipe + recipeComment + recipeRating + commentDate),
-                           User = user,
-                           Comment = newComment,
-                           Recipe = recipe,
-                           RatingNumber = ratingNumber)
-        newRating.save()
+        if request.is_ajax():
+            return JsonResponse({
+                'success': True,
+                'url': reverse('app:recipe', kwargs={'recipeid': recipeid})
+            })
 
 
 class ProfileView(View):
@@ -453,18 +462,18 @@ class ProfileView(View):
 
         if "favourite" in button:
             print("performing favourites")
-            try:
-                favourites = Favourites.objects.get(User=userAccount)
-                favRecipes = Favourites.Recipes.all()
-                recipes = favRecipes
-            except Favourites.DoesNotExist:
+            favourites = userAccount.Favourites.all()  # Assuming `favourites` is a ManyToManyField
+            if favourites:
+                recipes = favourites
+            else:
                 recipes = None
 
-
         if "myRecipes" in button:
+            print("performing myrecipe")
             recipes = Recipe.objects.all()
 
         if "create" in button:
+            print("performing create")
             return redirect(reverse('app:create'))
 
 

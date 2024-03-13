@@ -12,6 +12,7 @@ class UserAccount(models.Model):
     Email = models.CharField(max_length=30)
     PhoneNumber = models.CharField(max_length=30)
     Nickname = models.CharField(max_length=30)
+    Favourites = models.ManyToManyField('Recipe', null=True, blank=True)
 
     #Added this by Nduka
     def __str__(self):
@@ -56,13 +57,6 @@ class Recipe(models.Model):
     def __str__(self):
         return self.RecipeID
 
-class Favourites(models.Model):
-    # User and Collection are one-to-many
-    User = models.ForeignKey(UserAccount,related_name="Users", on_delete=models.CASCADE)
-    Recipes = models.ForeignKey(Recipe, related_name="recipes", on_delete=models.SET_NULL, null=True, blank=True)
-    # Get the primary key
-    def __str__(self):
-        return self.CollectionID
 
 class Comment(models.Model):
     # CommentID is the primary key
