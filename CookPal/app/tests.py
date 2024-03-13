@@ -12,6 +12,7 @@ class ViewTestCase(TestCase):
         PhoneNumber='1234567890',
         Nickname='Test User')
 
+
         self.recipe = Recipe.objects.create(
             RecipeID='testrecipe',
             Title='Test Recipe',
@@ -34,14 +35,15 @@ class ViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'app/about.html')
 
-    def test_login_view_get(self):
-        response = self.client.get(reverse('app:login'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'app/login.html')
-
-    def test_login_view_post(self):
+    def test_login_view(self):
         response = self.client.post(reverse('app:login'), {'login-username': 'testuser', 'login-password': '12345'})
         self.assertRedirects(response, reverse('app:homepage'))
+
+    def test_logout_view(self):
+        self.client.login(username='testuser', password='12345')
+        response = self.client.get(reverse('app:logout'))
+        self.assertRedirects(response, reverse('app:homepage'))
+        self.assertFalse(response.context['user'].is_authenticated)
 
     def test_report_view_get(self):
         response = self.client.get(reverse('app:report', kwargs={'reportid': self.recipe.RecipeID}))
@@ -78,10 +80,10 @@ class ViewTestCase(TestCase):
         self.assertTemplateUsed(response, 'app/recipe.html')
         self.assertContains(response, 'Test Recipe 2')
 
-    # def test_profile_view_get(self):
-    #     self.client.login(username='testuser', password='12345')
-    #     response = self.client.get(reverse('app:profile', kwargs={'username': 'testuser'}))
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertTemplateUsed(response, 'app/profile.html')
+    def test_profile_view_get(self):
+        self.client.login(username='testuser', password='12345')
+        response = self.client.get(reverse('app:profile', kwargs={'username': 'testuser'}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'app/profile.html')
 
 
