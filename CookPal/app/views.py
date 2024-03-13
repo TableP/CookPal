@@ -361,8 +361,11 @@ class RecipeView(View):
         # grabbing the id from the url from which we can match recipe details via the method we created earlier
         currentRecipe = self.get_recipe_details(recipeid)
         try:
-            recipeuser = currentRecipe.User
-        except recipeuser .DoesNotExist:
+            recipeuserAccount = currentRecipe.User
+            print(recipeuserAccount)
+
+
+        except recipeuser.DoesNotExist:
             testuser = User.objects.create_user(username='testuser', password='12345')
             user_account = UserAccount.objects.create(user=testuser,
                                                     Email='testuser@example.com',
@@ -372,7 +375,7 @@ class RecipeView(View):
             currentRecipe.save()
 
         # user = User.objects.get(username=request.user.username)
-
+        recipeOwnerNickname = recipeuserAccount.Nickname
         # if no valid recipe is found then this response is given
         if currentRecipe is None:
             return HttpResponse("INVALID RECIPE")
@@ -381,7 +384,9 @@ class RecipeView(View):
                    'ingredients': currentRecipe.Ingredients,
                    'instructions': currentRecipe.Instructions,
                    'recipeID': currentRecipe.RecipeID,
-                   'username': request.user.username}
+                   'username': request.user.username,
+                   'recipeUserOwner': recipeOwnerNickname,
+                   'recipeUsername': recipeuserAccount}
         print(context)
         return render(request, 'app/recipe.html', context=context)
 
@@ -437,11 +442,14 @@ class ProfileView(View):
     def post(self, request, username):
         user = User.objects.get(username=username)
         button = request.POST.get('button').strip()
-        userAccount = UserAccount.objects.get(Nickname=user)
+        userAccount = UserAccount.objects.get(user=user)
         username = userAccount.Nickname
         email = userAccount.Email
         recipes = Recipe.objects.all()
         print(button)
+        print(username)
+        print("qucik located" + username)
+        print(userAccount.Nickname)
 
         if "favourite" in button:
             print("performing favourites")
