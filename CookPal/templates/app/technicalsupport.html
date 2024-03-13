@@ -80,7 +80,26 @@
             </div>
 
 
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#submitted">Submit</button>
+
+            <!-- pop up window for submitted form-->
+            <div class="modal fade" id="submitted" tabindex="-1" aria-labelledby="submittedlabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="submitted">Notification</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Form submitted successfully!
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </form>
 
         <footer class="pt-3 mt-4 text-body-secondary border-top">

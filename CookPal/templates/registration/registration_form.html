@@ -22,13 +22,14 @@
                         <p class="required"><label for="id_password" class="form-label mt-3">Password</label>
                         <input type="password" class="form-control" id="id_password1" name="password1" placeholder="Enter password">
                     </div>
-	 	    <div>
-                        <p class="required"><label for="id_password1" class="form-label mt-3">Password</label>
-                        <input type="password" class="form-control" id="id_password2" name="password2" placeholder="Enter password">
-			<span class="helptext">
-				Enter the same password as before, for verification.
-			</span>
+	 	            <div>
+                        <p class="required"><label for="id_password1" class="form-label mt-3">Confirm Password</label>
+                        <input type="password" class="form-control" id="id_password2" name="password2" placeholder="Enter password" onblur="checkPasswordsInRegistration()">
+                        <span class="helptext">
+                            Enter the same password as before, for verification.
+                        </span>
                     </div>
+                    <div id="checkPasswordRegistration"></div>
                     <div>
                         <label for="Signup-Nickname" class="form-label mt-3">Nickname</label>
                         <input type="text" class="form-control" id="id_nickname" placeholder="Enter Nickname" name="nickname">
@@ -40,7 +41,7 @@
                     </div>
 
                     <div>
-                        <label for="phone" class="form-label mt-3">Email</label>
+                        <label for="phone" class="form-label mt-3">Phone</label>
                         <input type="text" class="form-control" id="phone" placeholder="Enter phone" name="phone">
                     </div>
 
@@ -52,4 +53,6 @@
             </div>
         </div>
     </div>
+
+    <script src="{% static '\js\scripts.js' %}"></script>
 {% endblock %}

@@ -9,7 +9,38 @@
     color: gold;
   }
 
+.starInComment {
+  cursor: pointer;
+  color: gold;
+}
+
 .dateInComment{
     color:grey;
 }
-  
+ 
+.dateInSubComment{
+  color:grey;
+}
+
+ul.no-list-style{
+  list-style-type: none;
+  margin-top: 10px;
+}
+
+.user-comment{
+  display: flex;
+  align-items: center;
+}
+
+.user-comment img{
+  margin-right: 10px;
+}
+
+.user-recipe{
+  display: flex;
+  align-items: center;
+}
+
+.user-recipe img{
+  margin-right: 10px;
+}

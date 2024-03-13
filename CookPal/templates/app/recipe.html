@@ -44,6 +44,10 @@
         <div class="container py-4 border-bottom">
 
             <h1 class="mb-5">Title of Recipe</h1>
+            <div class="user-recipe mb-3">
+              <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+              <h5>Example User</h5>
+            </div>
       
             <div class="row align-items-md-stretch">
                 <div class="col-md-6">
@@ -88,7 +92,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-suit-heart-fill" viewBox="0 0 16 16">
                                 <path d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1"></path>
                             </svg>
-                            Add to Collection
+                            Add to Favourite
                         </button>
 
                         <button type="button" class="btn btn-primary mt-5" data-bs-toggle="modal" data-bs-target="#shareModal">
@@ -176,39 +180,46 @@
         </div>
 
         <div class="container py-4">
-            <div class="row align-items-md-stretch">
-                <div class="p-5 mt-1 col-md-2"></div>
-                <div class="p-5 mt-1 col-md-10"><h3>Comments</h3></div>
-                <div class="p-5 mt-1 col-md-2"></div>
-                <div class="p-5 mt-1 col-md-8 bg-body-tertiary rounded-3">
-                    <h5>Example User</h5>
-                    <span class="star" data-value="1">☆</span>
-                    <span class="star" data-value="2">☆</span>
-                    <span class="star" data-value="3">☆</span>
-                    <span class="star" data-value="4">☆</span>
-                    <span class="star" data-value="5">☆</span>
-                    <p class="fs-6">Comments here... Comments here... Comments here... Comments here... </p>
-                    <p class="dateInComment">Date & Time</p>
-                    <button type="button" class="replybtn btn-link" data-comment-id="comment1-reply">Reply</button>
-                    <div class="reply-form" id="comment1-reply" style="display:none;">
-                        <textarea placeholder="Write reply..."></textarea>
-                        <button class="submit-reply">Submit</button>
-                    </div>
-
+          <div class="row align-items-md-stretch">
+            <h2 class="p-5 mt-1 col-md-12">Comments</h2>
+            <div class="p-5 mt-1 col-md-2"></div>
+            <ul class="no-list-style p-5 mt-1 col-md-10">
+              <li>
+                <div class="user-comment">
+                  <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+                  <h5>Example User</h5>
                 </div>
-                <div class="p-5 mt-1 col-md-2"></div>
-
-
-            </div>
+                      <span class="starInComment" data-value="1">☆</span>
+                      <span class="starInComment" data-value="2">☆</span>
+                      <span class="starInComment" data-value="3">☆</span>
+                      <span class="starInComment" data-value="4">☆</span>
+                      <span class="starInComment" data-value="5">☆</span>
+                      <p class="fs-6">Comments here... Comments here... Comments here... Comments here... </p>
+                      <p class="dateInComment">Date & Time</p>
+                      <button type="button" class="replybtn btn-link" data-comment-id="comment1-reply">Reply</button>
+                      <div class="reply-form" id="comment1-reply" style="display:none;">
+                          <textarea placeholder="Write reply..."></textarea>
+                          <button class="submit-reply">Submit</button>
+                      </div>
+                      <ul class="replies no-list-style">
+                        <li>
+                          <div class="user-comment">
+                            <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+                            <h6>Another user</h6>
+                          </div>
+                          <p class="fs-6">Sub comments here... </p>
+                          <p class="dateInSubComment">Date & Time</p>
+                        </li>
+                      </ul>
+              </li>
+            </ul>
+            <div class="p-5 mt-1 col-md-2"></div>
+          </div>
         </div>
-
-              
-
-        
 
         <footer class="pt-3 mt-4 text-body-secondary border-top">
             © 2024 Group 27
         </footer>
       </main>
-    <script src="scripts.js"></script>
+    <script src="{% static 'js/scripts.js' %}"></script>
 {% endblock %}
