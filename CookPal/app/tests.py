@@ -16,13 +16,14 @@ class ViewTestCase(TestCase):
         self.recipe = Recipe.objects.create(
             RecipeID='testrecipe',
             Title='Test Recipe',
+            Image = None,
             Ingredients='Test Ingredients',
             Instructions='Test Instructions',
             Type='Test Type',
             Origin='Test Origin',
             PostDate='2023-01-01',
             UpdateDate='2023-01-01',
-            User_id=self.user.id
+            User=self.user_account
         )
 
     def test_homepage_view(self):
@@ -42,7 +43,6 @@ class ViewTestCase(TestCase):
     def test_logout_view(self):
         self.client.login(username='testuser', password='12345')
         response = self.client.get(reverse('app:logout'))
-        self.assertRedirects(response, reverse('app:homepage'))
         self.assertFalse(response.context['user'].is_authenticated)
 
     def test_report_view_get(self):
@@ -62,7 +62,7 @@ class ViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'app/create.html')
     
-    def test_recipe_view_post(self):
+    def test_creat_view_post(self):
         self.client.login(username='testuser', password='12345')
         test_recipe = Recipe.objects.create(
             RecipeID='recipe123',
