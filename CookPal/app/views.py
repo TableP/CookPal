@@ -164,6 +164,7 @@ class ReportView(View):
     def post(self, request, reportid):
         reportReason = request.POST.get('reportReason')
         reportEmail = reportReason.POST.get('reportEmail')
+        recipeid = reportReason.POST.get('recipeid')
         reportId = uniqueId(reportReason + reportEmail)
         reportedRecipe = Recipe.objects.get(RecipeID = recipeid)
         user = User.objects.get(username=request.user.username)
@@ -358,7 +359,18 @@ class RecipeView(View):
         print("RECIPE PAGE")
         # grabbing the id from the url from which we can match recipe details via the method we created earlier
         currentRecipe = self.get_recipe_details(recipeid)
-        user = User.objects.get(username=request.user.username)
+        try:
+            recipeuser = currentRecipe.User
+        except recipeuser .DoesNotExist:
+            testuser = User.objects.create_user(username='testuser', password='12345')
+            user_account = UserAccount.objects.create(user=testuser,
+                                                    Email='testuser@example.com',
+                                                    PhoneNumber='1234567890',
+                                                    Nickname='Test User')
+            currentRecipe.User = user_account
+            currentRecipe.save()
+
+        # user = User.objects.get(username=request.user.username)
 
         # if no valid recipe is found then this response is given
         if currentRecipe is None:
@@ -480,22 +492,22 @@ class SettingsView(View):
         print(phone)
         print(password)
 
-        if username is not "":
+        if username is not None:
             userAccount.Nickname = username
             userAccount.save()
             print("empty username")
             print("new nickname: " + userAccount.Nickname)
 
 
-        if email is not "":
+        if email is not None:
             userAccount.Email = email
             print("empty email")
 
-        if phone is not "":
+        if phone is not None:
             userAccount.PhoneNumber = phone
             print("empty phone")
 
-        if password is not "":
+        if password is not None:
             user.password = password
             print("empty password")
             user.save()
