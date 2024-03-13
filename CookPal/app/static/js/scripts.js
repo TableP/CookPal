@@ -93,6 +93,23 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+function checkPasswordsInRegistration() {
+  var password = document.getElementById('id_password1').value;
+  var confirmPassword = document.getElementById('id_password2').value;
+  var message = document.getElementById('checkPasswordRegistration');
+
+  if (password === confirmPassword) {
+    message.style.color = 'green';
+    message.textContent = "Passwords match.";
+    // logic for matched password
+  } else {
+    message.style.color = 'red';
+    message.textContent = "Passwords do not match.";
+    confirmPassword.style.borderColor = 'red';
+    // logic for not matched password
+  }
+}
+
 function checkPasswords() {
   var password = document.getElementById('change-password').value;
   var confirmPassword = document.getElementById('change-password-confirm').value;
