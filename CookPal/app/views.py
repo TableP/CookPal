@@ -17,9 +17,9 @@ import time
 import random
 
 # currently importing all for simplicity
-from app.models import UserAccount, User, Recipe, Support, Reported_Recipe, Comment, Rating
+from app.models import UserAccount, User, Recipe, Support, Reported_Recipe, Comment, Rating, Favourites
 
-from app.forms import RecipeForm, SupportForm
+
 
 from app import models
 
@@ -38,48 +38,64 @@ class HomepageView(View):
         print(request.POST.get('origin-submit'))
         print(request.body)
 
-        searchTitle = request.Post.get('search-submit')
-        searchType = request.Post.get('type-submit')
-        originType = request.Post.get('origin-submit')
+        searchTitle = request.POST.get('search-submit')
+        searchType = request.POST.get('type-submit')
+        originType = request.POST.get('origin-submit')
 
         #allows user to not submit all parameters and still search for recipes
-        if searchType and searchTitle is None:
+        if "Select a type" in searchType \
+                and "Select origin" not in originType:
+            print("search success5")
             searchRecipes = Recipe.objects.filter(
                 Origin=originType
             )
 
-        elif searchTitle and originType is None:
-            searchRecipes = Recipe.objects.filter(
-                Type=searchType
-            )
 
-        elif searchType and originType is None:
+        elif "Select a type" in searchType and "Select origin" in originType\
+                :
+            print("search success4")
             searchRecipes = Recipe.objects.filter(
                 Title=searchTitle,
             )
 
-        elif searchType is None:
+        elif "Select a type" in searchType\
+                 and "Select origin" not in originType:
+            print("search success3")
             searchRecipes = Recipe.objects.filter(
                 Title=searchTitle,
                 Origin=originType
             )
-        elif originType is None:
+        elif "Select origin" in originType\
+                 and "Select a type" not in searchType:
+            print("search success2")
             searchRecipes = Recipe.objects.filter(
                 Title=searchTitle,
                 Type=searchType
             )
 
-        elif searchTitle is None:
+        elif "" in searchTitle\
+                and "Select a type" not in searchType and "Select origin" not in originType:
+            print("search success1")
             searchRecipes = Recipe.objects.filter(
                 Type=searchType,
                 Origin=originType
             )
+        elif "Select origin" in originType and "Select a type" in searchType:
+            print("search success")
+            searchRecipes = Recipe.objects.all()
+
         else:
+            print("search success-1")
+            print(searchTitle)
+            print(searchType)
+            print(originType)
             searchRecipes = Recipe.objects.filter(
                 Title=searchTitle,
                 Type=searchType,
                 Origin=originType
             )
+
+        print(searchRecipes)
 
         context = {"recipes": searchRecipes}
         return render(request, 'app/homepage.html', context=context)
@@ -95,42 +111,6 @@ class ContactUsView(View):
         return render(request, 'app/contactus.html')
 
 
-class GeneralSupportView(View):
-    def get(self, request):
-        return render(request, 'app/generalsupport.html')
-
-    def post(self, request):
-        def post(self, request):
-            print("Working")
-            email = request.POST.get('email')
-            title = request.POST.get('title')
-            name = request.POST.get('name')
-            phone = request.POST.get('phone')
-            problemDescription = request.POST.get('problemDescription')
-
-            print(email + title + name + phone + problemDescription)
-
-            newSupport = Support(SupportID=uniqueId(title + name + email, Support),
-                                 Title=title, Name=name, Email=email, Phone=phone,
-                                 SupportDescription=problemDescription,
-                                 SupportDate=datetime.datetime.now())
-            newSupport.save()
-            if email is not None:
-                send_mail(
-                    'General Request Received',
-                    'Thank you for your request, we will look into it as soon as possible.',
-                    'xxxxx@gmail.com',
-                    [email],
-                    fail_silently=False,  # if have fault, don't report to the service
-                )
-
-            # use this to redirect user to maybe a thank you for submitting problem html
-            if request.is_ajax():
-                return JsonResponse({
-                    'success': True,
-                    'url': reverse('app:homepage')
-                })
-            return render(request, 'app/generalsupport.html')
 
 
 # Made changes to the View page
@@ -178,14 +158,14 @@ class LoginView(View):
 
 
 class ReportView(View):
-    def get(self, request):
+    def get(self, request, reportid):
         return render(request, 'app/report.html')
 
-    def post(self, request, recipeID):
+    def post(self, request, reportid):
         reportReason = request.POST.get('reportReason')
         reportEmail = reportReason.POST.get('reportEmail')
         reportId = uniqueId(reportReason + reportEmail)
-        reportedRecipe = Recipe.objects.get(RecipeID = recipeID)
+        reportedRecipe = Recipe.objects.get(RecipeID = recipeid)
         user = User.objects.get(username=request.user.username)
 
         newReport = Reported_Recipe(ReportID = reportId,
@@ -206,6 +186,41 @@ class ReportView(View):
 
 
 
+class GeneralSupportView(View):
+    def get(self, request):
+        return render(request, 'app/generalsupport.html')
+
+    def post(self, request):
+        print("Working")
+        email = request.POST.get('email')
+        title = request.POST.get('title')
+        name = request.POST.get('name')
+        phone = request.POST.get('phone')
+        problemDescription = request.POST.get('problemDescription')
+
+        print(email + title + name + phone + problemDescription)
+
+        newSupport = Support(SupportID=uniqueId(title + name + email, Support),
+                                     Title=title, Name=name, Email=email, Phone=phone,
+                                     SupportDescription=problemDescription,
+                                     SupportDate=datetime.datetime.now())
+        newSupport.save()
+        if email is not None:
+            send_mail(
+                        'Technical Support Request Received',
+                        'Thank you for your request, we will look into it as soon as possible.',
+                        'cookpal27@gmail.com',
+                        [email],
+                        fail_silently=False,  # if have fault, don't report to the service
+            )
+
+        # use this to redirect user to maybe a thank you for submitting problem html
+        if request.is_ajax():
+            return JsonResponse({
+                        'success': True,
+                        'url': reverse('app:homepage')
+            })
+        return render(request, 'app/generalsupport.html')
 class TechnicalSupportView(View):
     def get(self, request):
         return render(request, 'app/technicalsupport.html')
@@ -292,11 +307,13 @@ class CreateView(View):
         return render(request, 'app/create.html')
 
     def post(self, request):
+        print("test")
         recipe_name = request.POST.get('recipe_name')
         type = request.POST.get('type')
         origin = request.POST.get('origin')
         ingredients = request.POST.get('ingredients')
         instruction = request.POST.get('instructions')
+        picture = request.POST.get('image')
         user = User.objects.get(username=request.user.username)
 
         newRecipe = Recipe(User=UserAccount.objects.get(user=request.user),
@@ -308,6 +325,10 @@ class CreateView(View):
         uniqueID = models.uniqueId(request.user.username + "-" + recipe_name, newRecipe)
         print(uniqueID)
         newRecipe.RecipeID = uniqueID
+        if picture is not None:
+            newRecipe(Image=picture)
+
+
         newRecipe.save()
         print("saving recipe")
         print(newRecipe.RecipeID)
@@ -337,6 +358,7 @@ class RecipeView(View):
         print("RECIPE PAGE")
         # grabbing the id from the url from which we can match recipe details via the method we created earlier
         currentRecipe = self.get_recipe_details(recipeid)
+        user = User.objects.get(username=request.user.username)
 
         # if no valid recipe is found then this response is given
         if currentRecipe is None:
@@ -345,7 +367,8 @@ class RecipeView(View):
         context = {'recipe_name': currentRecipe.Title,
                    'ingredients': currentRecipe.Ingredients,
                    'instructions': currentRecipe.Instructions,
-                   'recipeID': currentRecipe.RecipeID}
+                   'recipeID': currentRecipe.RecipeID,
+                   'username': request.user.username}
         print(context)
         return render(request, 'app/recipe.html', context=context)
 
@@ -377,36 +400,53 @@ class RecipeView(View):
                            RatingNumber = ratingNumber)
         newRating.save()
 
-class ReportView(View):
-    def get(self, request):
-        return render(request, 'app/report.html')
 
 class ProfileView(View):
     def get(self, request, username):
-        user = User.objects.get(username=request.user.username)
-        userAccount = UserAccount.objects.get(username=user)
+        print(username)
+
+        user = User.objects.get(username=username)
+        userAccount = UserAccount.objects.get(user=user)
+        print(userAccount.Nickname)
         username = userAccount.Nickname
         email = userAccount.Email
+        allRecipes = Recipe.objects.all()
 
         context = {"username": username,
-                   "email": email}
+                   "email": email,
+                   "recipes": allRecipes}
 
-        return render(request, 'app/profile', context=context)
+        return render(request, 'app/profile.html', context=context)
 
-    def post(self, request, incomingUsername):
-        user = User.objects.get(username=request.user.username)
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        userAccount = UserAccount.objects.get(username=user)
+    def post(self, request, username):
+        user = User.objects.get(username=username)
+        button = request.POST.get('button').strip()
+        userAccount = UserAccount.objects.get(Nickname=user)
+        username = userAccount.Nickname
+        email = userAccount.Email
+        recipes = Recipe.objects.all()
+        print(button)
 
-        if username is not None:
-            userAccount(Nickname = username)
+        if "favourite" in button:
+            print("performing favourites")
+            try:
+                favourites = Favourites.objects.get(User=userAccount)
+                favRecipes = Favourites.Recipes.all()
+                recipes = favRecipes
+            except Favourites.DoesNotExist:
+                recipes = None
 
-        if email is not None:
-            userAccount(Email = email)
+
+        if "myRecipes" in button:
+            recipes = Recipe.objects.all()
+
+        if "create" in button:
+            return redirect(reverse('app:create'))
+
 
         context = {"username": username,
-                   "email": email}
+                   "email": email,
+                   "recipes": recipes}
 
         if request.is_ajax():
             return JsonResponse({
@@ -414,8 +454,61 @@ class ProfileView(View):
                 'url': reverse('app:profile', kwargs={'username': username})
             })
 
-        return render(request, 'app/profile', context=context)
+        return render(request, 'app/profile.html', context=context)
 
+
+class SettingsView(View):
+    def get(self, request):
+        user = User.objects.get(username=request.user.username)
+        userAccount = UserAccount.objects.get(user=user)
+        print("old nickname: " + userAccount.Nickname)
+        return render(request, 'app/settings.html')
+
+    def post(self, request):
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        password = request.POST.get('password')
+
+        user = User.objects.get(username=request.user.username)
+        userAccount = UserAccount.objects.get(user=user)
+
+        print(request.POST)
+
+        print(username.strip())
+        print(email)
+        print(phone)
+        print(password)
+
+        if username is not "":
+            userAccount.Nickname = username
+            userAccount.save()
+            print("empty username")
+            print("new nickname: " + userAccount.Nickname)
+
+
+        if email is not "":
+            userAccount.Email = email
+            print("empty email")
+
+        if phone is not "":
+            userAccount.PhoneNumber = phone
+            print("empty phone")
+
+        if password is not "":
+            user.password = password
+            print("empty password")
+            user.save()
+
+        print("new nickname: " + userAccount.Nickname)
+        # due to ajax sending json we must respond with json when attempting a redirect
+        if request.is_ajax():
+            return JsonResponse({
+                'success': True,
+                'url': reverse('app:settings')
+            })
+
+        return render(request, 'app/settings.html')
 
 
 # Create your views here.

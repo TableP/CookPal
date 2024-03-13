@@ -36,26 +36,15 @@ class Customer_Support(models.Model):
     # Admin and Site_Admin are one-to-one
     Admin = models.OneToOneField(Site_Admin, on_delete=models.CASCADE, primary_key=True)
 
-class Collection(models.Model):
-    # CollectionID is the primary key
-    CollectionID = models.CharField(max_length=30, primary_key=True)
-    # User and Collection are one-to-many
-    User = models.ForeignKey(UserAccount,related_name="collections", on_delete=models.CASCADE)
-    # Other fields
-    CollectionName = models.CharField(max_length=255)
-    # Get the primary key
-    def __str__(self):
-        return self.CollectionID
+
 
 class Recipe(models.Model):
     # RecipeID is the primary key
     RecipeID = models.CharField(max_length=30, primary_key=True)
     # User and Recipe are many-to-many
     User = models.ForeignKey(UserAccount,related_name="recipes", on_delete=models.CASCADE)
-    # Collection and Recipe are one-to-many
-    # Allow recipe is not in any collection
-    Collection = models.ForeignKey(Collection, related_name="recipes", on_delete=models.SET_NULL, null=True, blank=True)
     # Other fields
+    Image = models.ImageField(upload_to='profile_images', blank=True)
     Title = models.CharField(max_length=50)
     Type = models.CharField(max_length=50)
     Origin = models.CharField(max_length=50)
@@ -67,6 +56,13 @@ class Recipe(models.Model):
     def __str__(self):
         return self.RecipeID
 
+class Favourites(models.Model):
+    # User and Collection are one-to-many
+    User = models.ForeignKey(UserAccount,related_name="Users", on_delete=models.CASCADE)
+    Recipes = models.ForeignKey(Recipe, related_name="recipes", on_delete=models.SET_NULL, null=True, blank=True)
+    # Get the primary key
+    def __str__(self):
+        return self.CollectionID
 
 class Comment(models.Model):
     # CommentID is the primary key

@@ -35,6 +35,7 @@
             © 2024 Group 27 
         </footer>
     </div>
+     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             document.querySelector('form').addEventListener('submit', function (e) {
@@ -102,10 +103,12 @@
 
                $.ajax({
                    type: 'POST',
-                   url: '{% url 'app:report' %}',
+                   url: '{% url 'app:report' "test" %}',
                    data:{
                    reportEmail: email,
-                   reportReason: reason},
+                   reportReason: reason,
+                   recipeid: recipeid
+                   },
                    dataType: "json",
                    enctype: 'multipart/form-data',
                }).done(function(data){

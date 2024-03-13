@@ -59,6 +59,7 @@
                 isValid = false;
               }
 
+
               let typeSelect = document.getElementById('search-type');
               let typeOptionText = typeSelect.options[typeSelect.selectedIndex].text;
               let originSelect = document.getElementById('search-origin');
@@ -113,6 +114,7 @@
               var instructions = $("#Instruction").val();
 
 
+
                $.ajax({
                    type: 'POST',
                    url: '{% url 'app:create' %}',
@@ -141,16 +143,58 @@
 
     </script>
 </head>
+
 <body>
+
+
 <header class="p-3 mb-3 border-bottom">
     <div class="container">
+
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <span class="fs-4">CookPal</span>
+
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="#" class="nav-link px-2 link-secondary">Homepage</a></li>
+                <li><a href="{% url 'app:homepage' %}" class="nav-link px-2 link-secondary">Homepage</a></li>
             </ul>
-        </div>
+
+             <div class="dropdown text-end">
+                <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+                </a>
+                <ul class="dropdown-menu text-small">
+                    <li><a class="dropdown-item" href="{% url 'app:create' %}">New Recipe</a></li>
+                    <li><a class="dropdown-item" href="{% url 'app:profile' request.user.username %}">My Favourite</a></li>
+                    <li><a class="dropdown-item" href="{% url 'app:profile' request.user.username %}">Profile</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="{% url 'app:settings' %}">Settings</a></li>
+                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#logout" href="{% url 'app:logout' %}">Sign out</a></li>
+                </ul>
+            </div>
+
+            <div class="modal fade" id="logout" tabindex="-1" aria-labelledby="logout" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="logout">Notification</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            You already logged out!
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
     </div>
+
 </header>
 
 <div class="container mt-5">
