@@ -7,6 +7,14 @@
 
 {% block body_block %}
 <div class="container py-5">
+
+    <div class="d-flex justify-content-end">
+        <div class="colorPicker d-flex flex-column align-items-end">
+            <label for="ColorInput" class="form-label my-2" style="color: blue;">Custom your webpage</label>
+            <input type="color" class="form-control form-control-color" id="ColorInput" placeholder="iiii" value="#DCDCDC" title="Choose your color">
+        </div>
+    </div>
+
     <div>
         <h1>
             Your best cook pal
@@ -15,6 +23,29 @@
             To make your cook easier and better.
         </p>
     </div>
+
+    <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="{% static 'images/vegetables.jpg' %}" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item">
+            <img src="{% static 'images/strawberry.jpg' %}" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item">
+            <img src="{% static 'images/food.jpg' %}" class="d-block w-100" alt="...">
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+
     <hr class="my-5">
 
     <p class="d-inline-flex gap-1">

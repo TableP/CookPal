@@ -126,3 +126,10 @@ function checkPasswords() {
     // logic for not matched password
   }
 }
+
+document.getElementById('ColorInput').addEventListener('input', changeBackgroundColor);
+
+function changeBackgroundColor() {
+  var color = document.getElementById('ColorInput').value;
+  document.body.style.backgroundColor = color;
+};
