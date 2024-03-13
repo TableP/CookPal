@@ -8,7 +8,7 @@
     <div class="container">
         <div class="d-flex">
             <div class="container">
-                 <form method="post" action="." class="mb-5 mt-5 mx-5 my-5">
+                 <form method="post" action="{% url 'app:login' %}" class="mb-5 mt-5 mx-5 my-5">
 		{% csrf_token %}
                     <div>
                         <p class="required"><label for="id_username" class="form-label">Username</label>
@@ -20,7 +20,7 @@
 		   </div>
                     <div>
                         <p class="required"><label for="id_password" class="form-label mt-3">Password</label>
-                        <input type="password" class="form-control" id="id_password1" name="password1" placeholder="Enter password">
+                        <input type="password" class="form-control" id="id_password1" name="password" placeholder="Enter password">
                     </div>
 	 	            <div>
                         <p class="required"><label for="id_password1" class="form-label mt-3">Confirm Password</label>

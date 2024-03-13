@@ -121,9 +121,9 @@ class LoginView(View):
     def post(self, request):
         # Check if the request is for user registration
         if 'login-username' not in request.POST:
-            username = request.POST.get('Signup-username')
-            password = request.POST.get('Signup-password')
-            nickname = request.POST.get('Signup-Nickname')
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            nickname = request.POST.get('nickname')
             email = request.POST.get('email')
             phoneNumber = request.POST.get('phone')
 
@@ -135,6 +135,7 @@ class LoginView(View):
                 return HttpResponse("Username already exists. Choose a different username.")
 
             newUser = User.objects.create_user(username=username, password=password)
+            newUser.save()
             newUserAccount = UserAccount(user=newUser, Nickname=nickname, Email=email, PhoneNumber=phoneNumber)
             newUserAccount.save()
             return render(request, 'app/homepage.html')
@@ -415,7 +416,7 @@ class RecipeView(View):
 
 class ProfileView(View):
     def get(self, request, username):
-        print(username)
+        print("qucik located"+username)
 
         user = User.objects.get(username=username)
         userAccount = UserAccount.objects.get(user=user)
@@ -423,10 +424,13 @@ class ProfileView(View):
         username = userAccount.Nickname
         email = userAccount.Email
         allRecipes = Recipe.objects.all()
-
-        context = {"username": username,
-                   "email": email,
-                   "recipes": allRecipes}
+        if allRecipes is not None:
+            context = {"username": username,
+                     "email": email,
+                    "recipes": allRecipes}
+        else:
+            context = {"username": username,
+                       "email": email}
 
         return render(request, 'app/profile.html', context=context)
 
