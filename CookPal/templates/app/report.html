@@ -36,6 +36,36 @@
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+          }
+                var csrftoken = getCookie('csrftoken');
+               function csrfSafeMethod(method) {
+                // these HTTP methods do not require CSRF protection
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+                }
+
+                $.ajaxSetup({
+                   beforeSend: function(xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                            }
+                        }
+                    })
+
+
+
             document.querySelector('form').addEventListener('submit', function (e) {
                 e.preventDefault();
                 
@@ -61,6 +91,32 @@
                 // If all fields are valid, print the information to console
                 if (isValid) {
                     console.log(`Reason for report: ${reason}, Email: ${email}`);
+
+                // grabs the current url as string
+                var currentUrl = window.location.href;
+                // Split the URL by '/' to get the parts
+                var urlParts = currentUrl.split('/');
+
+                var reportID = urlParts[urlParts.length - 2];
+                console.log('Report ID:', reportID);
+                let url = "/report/" + reportID + "/";
+
+                     $.ajax({
+                   type: 'POST',
+                   url: url,
+                   data:{
+                   problemDescription: reason,
+                   email: email},
+                   dataType: "json",
+                   enctype: 'multipart/form-data',
+               }).done(function(data){
+                if(data.success){
+                window.location.href = data.url;
+                }
+                });
+
+
+
                 }
             });
         });

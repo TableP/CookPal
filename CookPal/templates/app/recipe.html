@@ -68,6 +68,17 @@
     console.error("Error:", error);
 }
 
+ try {
+const addToFavourite = document.getElementById("report");
+    addToFavourite.addEventListener('click', function(e) {
+        console.log("linked button");
+        e.preventDefault();
+        sendRequestToBackend(3);
+    });
+} catch(error) {
+    console.error("Error:", error);
+}
+
               function sendRequestToBackend(buttonResponse){
               let recipeID = "{{ recipeID }}";
               console.log("Value of test1:", recipeID);
@@ -142,6 +153,7 @@
                             Share to Others
                         </button>
 
+                        {% if userAccount %}
 
                         {% if currentRecipe in userAccount.Favourites.all %}
                         <button type="button" class="btn btn-outline-success" id="removeFromFavourite">
@@ -157,6 +169,9 @@
                             </svg>
                             Add to Favourite
                         </button>
+                        {% endif %}
+
+                        {% else %}
                         {% endif %}
 
 
@@ -237,41 +252,41 @@
           
         </div>
 
-        <div class="container py-4">
-          <div class="row align-items-md-stretch">
-            <h2 class="p-5 mt-1 col-md-12">Comments</h2>
-            <div class="p-5 mt-1 col-md-2"></div>
-            <ul class="no-list-style p-5 mt-1 col-md-10">
-              <li>
-                <div class="user-comment">
-                  <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
-                  <h5>Example User</h5>
-                </div>
-                      <span class="starInComment" data-value="1">☆</span>
-                      <span class="starInComment" data-value="2">☆</span>
-                      <span class="starInComment" data-value="3">☆</span>
-                      <span class="starInComment" data-value="4">☆</span>
-                      <span class="starInComment" data-value="5">☆</span>
-                      <p class="fs-6">Comments here... Comments here... Comments here... Comments here... </p>
-                      <p class="dateInComment">Date & Time</p>
-                      <button type="button" class="replybtn btn-link" data-comment-id="comment1-reply">Reply</button>
-                      <div class="reply-form" id="comment1-reply" style="display:none;">
-                          <textarea placeholder="Write reply..."></textarea>
-                          <button class="submit-reply">Submit</button>
-                      </div>
-                      <ul class="replies no-list-style">
-                        <li>
-                          <div class="user-comment">
-                            <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
-                            <h6>Another user</h6>
-                          </div>
-                          <p class="fs-6">Sub comments here... </p>
-                          <p class="dateInSubComment">Date & Time</p>
-                        </li>
-                      </ul>
-              </li>
-            </ul>
-            <div class="p-5 mt-1 col-md-2"></div>
-          </div>
-        </div>
+<!--        <div class="container py-4">-->
+<!--          <div class="row align-items-md-stretch">-->
+<!--            <h2 class="p-5 mt-1 col-md-12">Comments</h2>-->
+<!--            <div class="p-5 mt-1 col-md-2"></div>-->
+<!--            <ul class="no-list-style p-5 mt-1 col-md-10">-->
+<!--              <li>-->
+<!--                <div class="user-comment">-->
+<!--                  <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">-->
+<!--                  <h5>Example User</h5>-->
+<!--                </div>-->
+<!--                      <span class="starInComment" data-value="1">☆</span>-->
+<!--                      <span class="starInComment" data-value="2">☆</span>-->
+<!--                      <span class="starInComment" data-value="3">☆</span>-->
+<!--                      <span class="starInComment" data-value="4">☆</span>-->
+<!--                      <span class="starInComment" data-value="5">☆</span>-->
+<!--                      <p class="fs-6">Comments here... Comments here... Comments here... Comments here... </p>-->
+<!--                      <p class="dateInComment">Date & Time</p>-->
+<!--                      <button type="button" class="replybtn btn-link" data-comment-id="comment1-reply">Reply</button>-->
+<!--                      <div class="reply-form" id="comment1-reply" style="display:none;">-->
+<!--                          <textarea placeholder="Write reply..."></textarea>-->
+<!--                          <button class="submit-reply">Submit</button>-->
+<!--                      </div>-->
+<!--                      <ul class="replies no-list-style">-->
+<!--                        <li>-->
+<!--                          <div class="user-comment">-->
+<!--                            <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">-->
+<!--                            <h6>Another user</h6>-->
+<!--                          </div>-->
+<!--                          <p class="fs-6">Sub comments here... </p>-->
+<!--                          <p class="dateInSubComment">Date & Time</p>-->
+<!--                        </li>-->
+<!--                      </ul>-->
+<!--              </li>-->
+<!--            </ul>-->
+<!--            <div class="p-5 mt-1 col-md-2"></div>-->
+<!--          </div>-->
+<!--        </div>-->
 {% endblock %}

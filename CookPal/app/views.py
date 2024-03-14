@@ -141,19 +141,27 @@ class LoginView(View):
 
 class ReportView(View):
     def get(self, request, reportid):
+        print(reportid)
         return render(request, 'app/report.html')
 
     def post(self, request, reportid):
-        reportReason = request.POST.get('reportReason')
-        reportEmail = reportReason.POST.get('reportEmail')
-        recipeid = reportReason.POST.get('recipeid')
-        reportId = uniqueId(reportReason + reportEmail)
-        reportedRecipe = Recipe.objects.get(RecipeID = recipeid)
-        user = User.objects.get(username=request.user.username)
+        reportReason = request.POST.get('problemDescription')
+        reportEmail = request.POST.get('email')
+        recipeid = reportid
+        print(reportid)
+        user_instance = request.user
+        user_account = UserAccount.objects.get(user=user_instance)
+        print(user_account)
 
-        newReport = Reported_Recipe(ReportID = reportId,
-                                    User = user,
-                                    Reported_Recipe = reportedRecipe,
+        reportedRecipe = Recipe.objects.get(RecipeID = recipeid)
+        print(reportedRecipe)
+
+
+
+
+        newReport = Reported_Recipe(ReportID = uniqueId(reportReason + reportEmail + recipeid, Reported_Recipe),
+                                    User = user_account,
+                                    ReportedRecipe = reportedRecipe,
                                     ReportedRecipeDescription = reportReason,
                                     ReportedDate = datetime.datetime.now())
 
@@ -344,8 +352,11 @@ class RecipeView(View):
             currentRecipe.User = user_account
             currentRecipe.save()
 
-        browsingUser = User.objects.get(username=request.user.username)
-        browsingUserAccount = UserAccount.objects.get(user=browsingUser)
+
+        browsingUserAccount = None
+        if request.user.is_authenticated:
+            browsingUser = User.objects.get(username=request.user.username)
+            browsingUserAccount = UserAccount.objects.get(user=browsingUser)
         recipeOwnerNickname = recipeuserAccount.Nickname
         # if no valid recipe is found then this response is given
         if currentRecipe is None:
@@ -385,6 +396,12 @@ class RecipeView(View):
             userFavourites = userAccount.Favourites
             userFavourites.remove(currentRecipe)
             userAccount.save()
+
+        if "3" in buttonType:
+            return JsonResponse({
+                'success': True,
+                'url': reverse('app:report', kwargs={'reportid': recipeid})
+            })
 
 
         if request.is_ajax():
