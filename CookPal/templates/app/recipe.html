@@ -128,7 +128,11 @@ const addToFavourite = document.getElementById("report");
                 {% else %}
               <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
                 {% endif %}
+                {% if user.is_authenticated %}
               <h5><a href="{% url 'app:profile' recipeUsername %}">{{ recipeUserOwner }}</a></h5>
+                {% else %}
+                <h5><a>{{ recipeUserOwner }}</a></h5>
+                {% endif %}
             </div>
       
             <div class="row align-items-md-stretch">
