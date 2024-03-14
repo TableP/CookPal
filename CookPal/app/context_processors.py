@@ -4,6 +4,9 @@ def useraccount(request):
     # Add the useraccount model to the context
     useraccount = None
     if request.user.is_authenticated:
-        useraccount = UserAccount.objects.get(user=request.user)
+        try:
+            useraccount = UserAccount.objects.get(user=request.user)
+        except UserAccount.DoesNotExist:
+            useraccount = None
 
     return {'useraccount': useraccount}

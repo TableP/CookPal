@@ -397,6 +397,7 @@ class RecipeView(View):
 class ProfileView(View):
     def get(self, request, username):
 
+        allRecipes = None
         user = User.objects.get(username=username)
         userAccount = UserAccount.objects.get(user=user)
         username = userAccount.Nickname

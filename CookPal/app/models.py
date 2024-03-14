@@ -12,7 +12,7 @@ class UserAccount(models.Model):
     Email = models.CharField(max_length=30)
     PhoneNumber = models.CharField(max_length=30)
     Nickname = models.CharField(max_length=30)
-    Favourites = models.ManyToManyField('Recipe', null=True, blank=True)
+    Favourites = models.ManyToManyField('Recipe', blank=True)
     Image = models.ImageField(upload_to='profile_images/', blank=True)
     #Added this by Nduka
     def __str__(self):
