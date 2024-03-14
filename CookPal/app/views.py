@@ -40,7 +40,6 @@ class HomepageView(View):
         #allows user to not submit all parameters and still search for recipes
         if "Select a type" in searchType \
                 and "Select origin" not in originType:
-            print("search success5")
             searchRecipes = Recipe.objects.filter(
                 Origin=originType
             )
@@ -48,21 +47,18 @@ class HomepageView(View):
 
         elif "Select a type" in searchType and "Select origin" in originType\
                 :
-            print("search success6")
             searchRecipes = Recipe.objects.filter(
                 Title=searchTitle,
             )
 
         elif "Select a type" in searchType\
                  and "Select origin" not in originType:
-            print("search success3")
             searchRecipes = Recipe.objects.filter(
                 Title=searchTitle,
                 Origin=originType
             )
         elif "Select origin" in originType\
                  and "Select a type" not in searchType:
-            print("search success1")
             searchRecipes = Recipe.objects.filter(
                 Type=searchType
             )
@@ -152,13 +148,9 @@ class ReportView(View):
         reportReason = request.POST.get('problemDescription')
         reportEmail = request.POST.get('email')
         recipeid = reportid
-        print(reportid)
         user_instance = request.user
         user_account = UserAccount.objects.get(user=user_instance)
-        print(user_account)
-
         reportedRecipe = Recipe.objects.get(RecipeID = recipeid)
-        print(reportedRecipe)
 
 
 
@@ -294,7 +286,6 @@ class CreateView(View):
         return render(request, 'app/create.html')
 
     def post(self, request):
-        print("test")
         recipe_name = request.POST.get('recipe_name')
         type = request.POST.get('type')
         origin = request.POST.get('origin')
@@ -365,8 +356,6 @@ class RecipeView(View):
         # if no valid recipe is found then this response is given
         if currentRecipe is None:
             return HttpResponse("INVALID RECIPE")
-
-        print(currentRecipe.Image)
 
         context = {'recipe_name': currentRecipe.Title,
                    'ingredients': currentRecipe.Ingredients,
@@ -467,11 +456,9 @@ class ProfileView(View):
                 recipes = None
 
         if "myRecipes" in button:
-            print("performing myrecipe")
             recipes = Recipe.objects.filter(User=userAccount)
 
         if "create" in button:
-            print("performing create")
             return redirect(reverse('app:create'))
 
 
