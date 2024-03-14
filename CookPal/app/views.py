@@ -154,7 +154,6 @@ class ReportView(View):
 
 
 
-
         newReport = Reported_Recipe(ReportID = uniqueId(reportReason + reportEmail + recipeid, Reported_Recipe),
                                     User = user_account,
                                     ReportedRecipe = reportedRecipe,
@@ -183,6 +182,18 @@ class GeneralSupportView(View):
         name = request.POST.get('name')
         phone = request.POST.get('phone')
         problemDescription = request.POST.get('problemDescription')
+
+        if email is None:
+            email = "email"
+
+        if title is None:
+            title = "title"
+
+        if name is None:
+            name = "name"
+
+        if phone is None:
+            phone = "phone"
 
 
         newSupport = Support(SupportID=uniqueId(title + name + email, Support),
@@ -216,6 +227,18 @@ class TechnicalSupportView(View):
         name = request.POST.get('name')
         phone = request.POST.get('phone')
         problemDescription = request.POST.get('problemDescription')
+
+        if email is None:
+            email = "email"
+
+        if title is None:
+            title = "title"
+
+        if name is None:
+            name = "name"
+
+        if phone is None:
+            phone = "phone"
 
         newSupport = Support(SupportID=uniqueId(title + name + email, Support),
                              Title=title, Name=name, Email=email, Phone=phone,
@@ -256,6 +279,19 @@ class AccountSupportView(View):
         name = request.POST.get('name')
         phone = request.POST.get('phone')
         problemDescription = request.POST.get('problemDescription')
+
+        if email is None:
+            email = "email"
+
+        if title is None:
+            title = "title"
+
+        if name is None:
+            name = "name"
+
+        if phone is None:
+            phone = "phone"
+
 
         newSupport = Support(SupportID=uniqueId(title + name + email, Support),
                              Title=title, Name=name, Email=email, Phone=phone,
