@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block head_custom %}
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script>
       document.addEventListener('DOMContentLoaded', function() {
       var username = "{{ username }}";
@@ -119,36 +119,13 @@
             </div>
             {% endfor %}
         </div>
-        
+
         {% else %}
         <strong>No recipes available</strong>
         {% endif %}
-<!--            <div class="card mx-4" style="width: 18rem;">-->
-<!--                <img src="logo.png" class="card-img-top" alt="example">-->
-<!--                <div class="card-body">-->
-<!--                    <h6 class="card-recipe-type">Type</h6>-->
-<!--                    <h5 class="card-title">Card title</h5>-->
-<!--                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
-<!--                    <a href="#" class="icon-link gap-1 icon-link-hover stretched-link">-->
-<!--                        More details-->
-<!--                    </a>-->
-<!--                </div>-->
-<!--            </div>-->
-
-<!--            <div class="card mx-4" style="width: 18rem;">-->
-<!--                <img src="logo.png" class="card-img-top" alt="example">-->
-<!--                <div class="card-body">-->
-<!--                    <h6 class="card-recipe-type">Type</h6>-->
-<!--                    <h5 class="card-title">Card title</h5>-->
-<!--                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
-<!--                    <a href="#" class="icon-link gap-1 icon-link-hover stretched-link">-->
-<!--                        More details-->
-<!--                    </a>-->
-<!--                </div>-->
-<!--            </div>  -->
-        </div> 
+        </div>
     </div>
 
-   
+
 
  {% endblock %}

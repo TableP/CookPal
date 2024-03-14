@@ -450,13 +450,13 @@ class ProfileView(View):
         if "favourite" in button:
             favourites = userAccount.Favourites.all()
             if favourites:
-                recipes = favourites
+                context['recipes'] = favourites
                 context['type'] = "Favourite Recipes"
             else:
-                recipes = None
+                context['recipes'] = None
 
         if "myRecipes" in button:
-            recipes = Recipe.objects.filter(User=userAccount)
+            context['recipes'] = Recipe.objects.filter(User=userAccount)
 
         if "create" in button:
             return redirect(reverse('app:create'))

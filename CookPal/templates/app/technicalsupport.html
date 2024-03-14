@@ -43,20 +43,20 @@
                   dropdownButton.textContent = title;
               });
           });
-  
+
           document.querySelector('form').addEventListener('submit', function (e) {
               e.preventDefault(); // Prevent the default submit action of the form
-              let errorElement = document.querySelector('.error-message'); 
+              let errorElement = document.querySelector('.error-message');
               if (errorElement) {
                   errorElement.remove();
               }
-              
+
               let problemDescription = document.getElementById('FormControlTextarea1').value.trim();
               let title = document.querySelector('.dropdown-toggle').textContent;
               let name = document.querySelector('input[type="text"]').value;
               let email = document.getElementById('InputEmail1').value;
               let phone = document.getElementById('phone').value;
-  
+
               if (problemDescription === "") {
                   document.getElementById('FormControlTextarea1').insertAdjacentHTML('afterend', '<div class="error-message" style="color: red;">This field cannot be empty</div>');
               } else {
