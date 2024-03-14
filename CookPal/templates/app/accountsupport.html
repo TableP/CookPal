@@ -6,30 +6,14 @@
 {% endblock %}
 
 {% block head_custom %}
-      <script>
+    <script>
       document.addEventListener("DOMContentLoaded", function () {
-          document.querySelectorAll('.dropdown-item').forEach(item => {
-              item.addEventListener('click', function () {
-                  let title = this.textContent;
-                  let dropdownButton = document.querySelector('.dropdown-toggle');
-                  dropdownButton.textContent = title;
-              });
-          });
-  
-          document.querySelector('form').addEventListener('submit', function (e) {
-              e.preventDefault(); // Prevent the default submit action of the form
-              let errorElement = document.querySelector('.error-message'); 
-              if (errorElement) {
-                  errorElement.remove();
-              }
-
-            function getCookie(name) {
+      function getCookie(name) {
             var cookieValue = null;
             if (document.cookie && document.cookie !== '') {
                 var cookies = document.cookie.split(';');
                 for (var i = 0; i < cookies.length; i++) {
                     var cookie = jQuery.trim(cookies[i]);
-                    // Does this cookie string begin with the name we want?
                     if (cookie.substring(0, name.length + 1) === (name + '=')) {
                         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                         break;
@@ -51,31 +35,36 @@
                             }
                         }
                     })
-              
+
+          document.querySelectorAll('.dropdown-item').forEach(item => {
+              item.addEventListener('click', function () {
+                  let title = this.textContent;
+                  let dropdownButton = document.querySelector('.dropdown-toggle');
+                  dropdownButton.textContent = title;
+              });
+          });
+
+          document.querySelector('form').addEventListener('submit', function (e) {
+              e.preventDefault(); // Prevent the default submit action of the form
+              let errorElement = document.querySelector('.error-message');
+              if (errorElement) {
+                  errorElement.remove();
+              }
+
               let problemDescription = document.getElementById('FormControlTextarea1').value.trim();
               let title = document.querySelector('.dropdown-toggle').textContent;
               let name = document.querySelector('input[type="text"]').value;
               let email = document.getElementById('InputEmail1').value;
               let phone = document.getElementById('phone').value;
-  
+
               if (problemDescription === "") {
                   document.getElementById('FormControlTextarea1').insertAdjacentHTML('afterend', '<div class="error-message" style="color: red;">This field cannot be empty</div>');
               } else {
-                  console.log(`Title: ${title}, Name: ${name}, Email: ${email}, Phone: ${phone}, Account Problem: ${problemDescription}`);
-                  sendSupportTicket();
-                  // Add other processing logic for the form data here if needed, such as sending it to the server
-              }
-          });
-
-           function sendSupportTicket(){
-              let problemDescription = document.getElementById('FormControlTextarea1').value.trim();
-              let title = document.querySelector('.dropdown-toggle').textContent;
-              let name = document.querySelector('input[type="text"]').value;
-              let email = document.getElementById('InputEmail1').value;
-              let phone = document.getElementById('phone').value;
 
 
-               $.ajax({
+
+                  console.log(`Title: ${title}, Name: ${name}, Email: ${email}, Phone: ${phone}, Technical Problem: ${problemDescription}`);
+                  $.ajax({
                    type: 'POST',
                    url: '{% url 'app:accountsupport' %}',
                    data:{
@@ -91,17 +80,17 @@
                 window.location.href = data.url;
                 }
                 });
-
-
               }
+          });
       });
     </script>
 {% endblock %}
-
 {% block body_block %}
 
-    <div class="container">
-        <form>
+
+      <div class="container">
+        <form method="post" action="{% url 'app:accountsupport' %}">
+            {% csrf_token %}
             <label for="InputName" class="form-label">What should we call you?</label>
             <div class="input-group mb-3">
                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Title</button>
@@ -127,10 +116,26 @@
             </div>
 
 
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#submitted">Submit</button>
+
+            <!-- pop up window for submitted form-->
+            <div class="modal fade" id="submitted" tabindex="-1" aria-labelledby="submittedlabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="submitted">Notification</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Form submitted successfully!
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </form>
-
     </div>
-
-   
 {% endblock %}

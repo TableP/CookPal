@@ -96,7 +96,11 @@
     <div class="container d-flex justify-content-center" style="flex-wrap: wrap;">
         {% for recipe in recipes %}
         <div class="card mx-4 mb-3" style="width: 18rem;">
+            {% if recipe.Image %}
+            <img src="{{ recipe.Image.url }}" class="card-img-top" alt="example">
+            {% else %}
             <img src="{% static 'images/logo.png' %}" class="card-img-top" alt="example">
+            {% endif %}
             <div class="card-body">
                 <h6 class="card-recipe-type">{{ recipe.Type }}</h6>
                 <h5 class="card-title">{{ recipe.Title }}</h5>

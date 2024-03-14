@@ -13,7 +13,7 @@ class UserAccount(models.Model):
     PhoneNumber = models.CharField(max_length=30)
     Nickname = models.CharField(max_length=30)
     Favourites = models.ManyToManyField('Recipe', null=True, blank=True)
-
+    Image = models.ImageField(upload_to='profile_images/', blank=True)
     #Added this by Nduka
     def __str__(self):
         return self.user.username
@@ -45,7 +45,7 @@ class Recipe(models.Model):
     # User and Recipe are many-to-many
     User = models.ForeignKey(UserAccount,related_name="recipes", on_delete=models.CASCADE)
     # Other fields
-    Image = models.ImageField(upload_to='profile_images', blank=True)
+    Image = models.ImageField(upload_to='recipe_images/', blank=True)
     Title = models.CharField(max_length=50)
     Type = models.CharField(max_length=50)
     Origin = models.CharField(max_length=50)

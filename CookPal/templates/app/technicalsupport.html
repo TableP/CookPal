@@ -8,6 +8,34 @@
 {% block head_custom %}
     <script>
       document.addEventListener("DOMContentLoaded", function () {
+      function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+          }
+                var csrftoken = getCookie('csrftoken');
+               function csrfSafeMethod(method) {
+                // these HTTP methods do not require CSRF protection
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+                }
+
+                $.ajaxSetup({
+                   beforeSend: function(xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                            }
+                        }
+                    })
+
           document.querySelectorAll('.dropdown-item').forEach(item => {
               item.addEventListener('click', function () {
                   let title = this.textContent;
@@ -32,8 +60,26 @@
               if (problemDescription === "") {
                   document.getElementById('FormControlTextarea1').insertAdjacentHTML('afterend', '<div class="error-message" style="color: red;">This field cannot be empty</div>');
               } else {
+
+
+
                   console.log(`Title: ${title}, Name: ${name}, Email: ${email}, Phone: ${phone}, Technical Problem: ${problemDescription}`);
-                  // Add other processing logic for the form data here if needed, such as sending it to the server
+                  $.ajax({
+                   type: 'POST',
+                   url: '{% url 'app:technicalsupport' %}',
+                   data:{
+                   problemDescription: problemDescription,
+                   title: title,
+                   name: name,
+                   email: email,
+                   phone: phone},
+                   dataType: "json",
+                   enctype: 'multipart/form-data',
+               }).done(function(data){
+                if(data.success){
+                window.location.href = data.url;
+                }
+                });
               }
           });
       });

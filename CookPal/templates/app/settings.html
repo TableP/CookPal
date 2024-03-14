@@ -12,69 +12,99 @@
 <script>
 
 document.addEventListener('DOMContentLoaded', function() {
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+            }
+        }
+    });
+
     const button0 = document.getElementById("submitButton");
-    console.log("binded");
     button0.addEventListener('click', function(e) {
         e.preventDefault();
         console.log("test");
-
-
-
-        function getCookie(name) {
-            var cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookies.length; i++) {
-                    var cookie = jQuery.trim(cookies[i]);
-                    // Does this cookie string begin with the name we want?
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-          }
-                var csrftoken = getCookie('csrftoken');
-               function csrfSafeMethod(method) {
-                // these HTTP methods do not require CSRF protection
-                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-                }
-
-                $.ajaxSetup({
-                   beforeSend: function(xhr, settings) {
-                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                            }
-                        }
-                    })
-                    sendChangeRequest();
+        sendChangeRequest();
     });
 
-    function sendChangeRequest() {
-        var username = $("#Signup-Nickname").val();
-        var email = $("#email").val();
-        var phone = $("#phone").val();
-        var password = $("#change-password").val();
-
-        $.ajax({
-            type: 'POST',
-            url: '{% url 'app:settings' %}',
-            data: {
-                username: username,
-                email: email,
-                phone: phone,
-                password: password
-            },
-            dataType: "json",
-            enctype: 'multipart/form-data',
-        }).done(function(data) {
-            if (data.success) {
-                window.location.href = data.url;
-            }
-        });
-    }
+    const uploadButton = document.getElementById("submitImage");
+    uploadButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        console.log("test");
+        sendImageChangeRequest();
+    });
 });
+
+function sendImageChangeRequest() {
+    var uploadImage = document.getElementById('UploadImage');
+    var file = document.getElementById('UploadImage').files[0];
+    let url = "/settings/";
+    var formData = new FormData();
+    formData.append('changeImage', "True");
+    formData.append('image', file);
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: "json",
+        enctype: 'multipart/form-data',
+    }).done(function(data) {
+        if (data.success) {
+            window.location.href = data.url;
+        }
+    });
+}
+
+function sendChangeRequest() {
+    var username = $("#Signup-Nickname").val();
+    var email = $("#email").val();
+    var phone = $("#phone").val();
+    var password = $("#change-password").val();
+    let url = "/settings/";
+
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: {
+            username: username,
+            email: email,
+            phone: phone,
+            password: password
+        },
+        dataType: "json",
+        enctype: 'multipart/form-data',
+    }).done(function(data) {
+        if (data.success) {
+            window.location.href = data.url;
+        }
+    });
+}
+
+
+
 
 
 </script>
@@ -98,12 +128,18 @@ document.addEventListener('DOMContentLoaded', function() {
         <form>
 
             <div class="user-settings">
+                {% if image %}
+                <p> image exist </p>
+                <img src="{{ image.url }}" alt="mdo" width="140" height="140" class="rounded-circle">
+                {% else %}
+                <p> no image exist </p>
                 <img src="https://github.com/mdo.png" alt="mdo" width="140" height="140" class="rounded-circle">
+                {% endif %}
                 <div class="mb-3 mt-2">
                     <p>Update your photo</p>
                     <input class="form-control" type="file" id="UploadImage" accept="image/*" multiple>
                 </div>
-                <button type="submit" class="btn btn-primary">Upload</button>
+                <button type="submit" class="btn btn-primary" id="submitImage">Upload</button>
             </div>
         </form>
         

@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('.submit-reply').forEach(button => {
     button.addEventListener('click', function() {
       // Add logic here to submit a reply, like using AJAX to send a reply to the server
-      alert('Reply submitted (this should be replaced with the actual submission logic here)');
+      alert('Reply submitted');
       // Hide the reply form
       this.parentElement.style.display = 'none';
     });

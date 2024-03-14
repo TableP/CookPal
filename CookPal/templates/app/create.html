@@ -112,18 +112,27 @@
               var origin = $("#search-origin").val();
               var ingredients = $("#Ingredient").val();
               var instructions = $("#Instruction").val();
+              var uploadImage = document.getElementById('UploadImage');
 
+              console.log(document.getElementById('UploadImage').files.length);
+              console.log(document.getElementById('UploadImage').files[0]);
+
+              var file = document.getElementById('UploadImage').files[0];
+              var formData = new FormData();
+                formData.append('recipe_name', recipe_name);
+                formData.append('type', type);
+                formData.append('origin', origin);
+                formData.append('ingredients', ingredients);
+                formData.append('instructions', instructions);
+                formData.append('image', file);
 
                $.ajax({
                    type: 'POST',
                    url: '{% url 'app:create' %}',
-                   data:{
-                   recipe_name: recipe_name,
-                   type: type,
-                   origin: origin,
-                   ingredients: ingredients,
-                   instructions: instructions},
+                   data: formData,
                    dataType: "json",
+                   processData: false,
+                   contentType: false,
                    enctype: 'multipart/form-data',
                }).done(function(data){
                 if(data.success){
@@ -136,11 +145,6 @@
               }
             });
 
-
-
-
-
-
     </script>
 {% endblock %}
 {% block body_block %}
@@ -152,7 +156,7 @@
     <form>
         <div class="mb-3">
             <label for="UploadImage" class="form-label">Upload your pictures</label>
-            <input class="form-control" type="file" id="UploadImage" accept="image/*" multiple>
+            <input class="form-control" type="file" id="UploadImage" accept="image/*" >
         </div>
 
         <div class="mb-3">

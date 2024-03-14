@@ -32,12 +32,6 @@ class HomepageView(View):
         return render(request, 'app/homepage.html', context=context)
 
     def post(self, request):
-        # we take this to another html?
-        print(request.POST.get('search-submit'))
-        print(request.POST.get('type-submit'))
-        print(request.POST.get('origin-submit'))
-        print(request.body)
-
         searchTitle = request.POST.get('search-submit')
         searchType = request.POST.get('type-submit')
         originType = request.POST.get('origin-submit')
@@ -53,21 +47,18 @@ class HomepageView(View):
 
         elif "Select a type" in searchType and "Select origin" in originType\
                 :
-            print("search success4")
             searchRecipes = Recipe.objects.filter(
                 Title=searchTitle,
             )
 
         elif "Select a type" in searchType\
                  and "Select origin" not in originType:
-            print("search success3")
             searchRecipes = Recipe.objects.filter(
                 Title=searchTitle,
                 Origin=originType
             )
         elif "Select origin" in originType\
                  and "Select a type" not in searchType:
-            print("search success2")
             searchRecipes = Recipe.objects.filter(
                 Title=searchTitle,
                 Type=searchType
@@ -75,27 +66,20 @@ class HomepageView(View):
 
         elif "" in searchTitle\
                 and "Select a type" not in searchType and "Select origin" not in originType:
-            print("search success1")
             searchRecipes = Recipe.objects.filter(
                 Type=searchType,
                 Origin=originType
             )
         elif "Select origin" in originType and "Select a type" in searchType:
-            print("search success")
             searchRecipes = Recipe.objects.all()
 
         else:
-            print("search success-1")
-            print(searchTitle)
-            print(searchType)
-            print(originType)
             searchRecipes = Recipe.objects.filter(
                 Title=searchTitle,
                 Type=searchType,
                 Origin=originType
             )
 
-        print(searchRecipes)
 
         context = {"recipes": searchRecipes}
         return render(request, 'app/homepage.html', context=context)
@@ -127,8 +111,6 @@ class LoginView(View):
             email = request.POST.get('email')
             phoneNumber = request.POST.get('phone')
 
-            print(username, password)
-            print(nickname, email, phoneNumber)
 
             # Check if the username already exists
             if User.objects.filter(username=username).exists():
@@ -152,7 +134,6 @@ class LoginView(View):
                 else:
                     return HttpResponse("ACCOUNT DISABLED")
             else:
-                print(f"Invalid login details: {username}, {password}")
                 return HttpResponse("INVALID LOGIN")
 
             return render(request, 'app/login.html')
@@ -193,14 +174,12 @@ class GeneralSupportView(View):
         return render(request, 'app/generalsupport.html')
 
     def post(self, request):
-        print("Working")
         email = request.POST.get('email')
         title = request.POST.get('title')
         name = request.POST.get('name')
         phone = request.POST.get('phone')
         problemDescription = request.POST.get('problemDescription')
 
-        print(email + title + name + phone + problemDescription)
 
         newSupport = Support(SupportID=uniqueId(title + name + email, Support),
                                      Title=title, Name=name, Email=email, Phone=phone,
@@ -228,14 +207,11 @@ class TechnicalSupportView(View):
         return render(request, 'app/technicalsupport.html')
 
     def post(self, request):
-        print("Working")
         email = request.POST.get('email')
         title = request.POST.get('title')
         name = request.POST.get('name')
         phone = request.POST.get('phone')
         problemDescription = request.POST.get('problemDescription')
-
-        print(email + title + name + phone + problemDescription)
 
         newSupport = Support(SupportID=uniqueId(title + name + email, Support),
                              Title=title, Name=name, Email=email, Phone=phone,
@@ -271,14 +247,11 @@ class AccountSupportView(View):
         return render(request, 'app/accountsupport.html')
 
     def post(self, request):
-        print("Working")
         email = request.POST.get('email')
         title = request.POST.get('title')
         name = request.POST.get('name')
         phone = request.POST.get('phone')
         problemDescription = request.POST.get('problemDescription')
-
-        print(email + title + name + phone + problemDescription)
 
         newSupport = Support(SupportID=uniqueId(title + name + email, Support),
                              Title=title, Name=name, Email=email, Phone=phone,
@@ -315,8 +288,9 @@ class CreateView(View):
         origin = request.POST.get('origin')
         ingredients = request.POST.get('ingredients')
         instruction = request.POST.get('instructions')
-        picture = request.POST.get('image')
+        picture = request.FILES.get('image')
         user = User.objects.get(username=request.user.username)
+
 
         newRecipe = Recipe(User=UserAccount.objects.get(user=request.user),
                            RecipeID=recipe_name, Title=recipe_name, Ingredients=ingredients,
@@ -325,15 +299,13 @@ class CreateView(View):
                            UpdateDate=datetime.datetime.now())
 
         uniqueID = models.uniqueId(request.user.username + "-" + recipe_name, newRecipe)
-        print(uniqueID)
         newRecipe.RecipeID = uniqueID
+
         if picture is not None:
-            newRecipe(Image=picture)
-
-
+            newRecipe.Image = picture
+        else:
+            print("no image")
         newRecipe.save()
-        print("saving recipe")
-        print(newRecipe.RecipeID)
         # due to ajax sending json we must respond with json when attempting a redirect
         if request.is_ajax():
             return JsonResponse({
@@ -357,15 +329,13 @@ class RecipeView(View):
         return recipe
 
     def get(self, request, recipeid):
-        print("RECIPE PAGE")
+        recipeuserAccounts = None;
         # grabbing the id from the url from which we can match recipe details via the method we created earlier
         currentRecipe = self.get_recipe_details(recipeid)
         try:
             recipeuserAccount = currentRecipe.User
-            print(recipeuserAccount)
 
-
-        except recipeuserAccount.DoesNotExist:
+        except UserAccount.DoesNotExist:
             testuser = User.objects.create_user(username='testuser', password='12345')
             user_account = UserAccount.objects.create(user=testuser,
                                                     Email='testuser@example.com',
@@ -381,6 +351,8 @@ class RecipeView(View):
         if currentRecipe is None:
             return HttpResponse("INVALID RECIPE")
 
+        print(currentRecipe.Image)
+
         context = {'recipe_name': currentRecipe.Title,
                    'ingredients': currentRecipe.Ingredients,
                    'instructions': currentRecipe.Instructions,
@@ -389,44 +361,25 @@ class RecipeView(View):
                    'recipeUserOwner': recipeOwnerNickname,
                    'recipeUsername': recipeuserAccount,
                    'userAccount': browsingUserAccount,
-                   'currentRecipe': currentRecipe}
-        print(context)
+                   'currentRecipe': currentRecipe,
+                   }
         return render(request, 'app/recipe.html', context=context)
 
     def post(self, request, recipeid):
-        print("test favourite")
-        print(request.POST.get('buttonType'))
 
-
-        # newComment = Comment(CommentID = uniqueId(recipe + recipeComment + commentDate),
-        #                      User = user,
-        #                      Recipe = recipe,
-        #                      Comment = recipeComment,
-        #                      CommendDate = commentDate)
-        #
-        # if parentCommentID is not None:
-        #     newComment(ParentCommendID = parentCommentID)
-        #
-        # newComment.save()
-        #
-        # newRating = Rating(RatingID = uniqueId(recipe + recipeComment + recipeRating + commentDate),
-        #                    User = user,
-        #                    Comment = newComment,
-        #                    Recipe = recipe,
-        #                    RatingNumber = ratingNumber)
-        # newRating.save()
         buttonType = request.POST.get('buttonType')
         currentRecipe = self.get_recipe_details(recipeid)
+
+        #based on the button value these two can occur
+        #adds to favourites
         if "1" in buttonType:
-            print("adding to favourite")
             user = User.objects.get(username=request.user.username)
             userAccount = UserAccount.objects.get(user=user)
             userFavourites = userAccount.Favourites
             userFavourites.add(currentRecipe)
             userAccount.save()
-
+        #removes from favourites
         if "2" in buttonType:
-            print("removing from favourite")
             user = User.objects.get(username=request.user.username)
             userAccount = UserAccount.objects.get(user=user)
             userFavourites = userAccount.Favourites
@@ -443,21 +396,30 @@ class RecipeView(View):
 
 class ProfileView(View):
     def get(self, request, username):
-        print("qucik located"+username)
 
         user = User.objects.get(username=username)
         userAccount = UserAccount.objects.get(user=user)
-        print(userAccount.Nickname)
         username = userAccount.Nickname
         email = userAccount.Email
-        allRecipes = Recipe.objects.all()
+        category = request.GET.get('category')
+        context = {"username": username, "email": email, "type": "Recipes"}
+        if category:
+            favourites = userAccount.Favourites.all()
+            if favourites:
+                allRecipes = favourites
+                context['type'] = "Favourite Recipes"
+            else:
+                allRecipes = Recipe.objects.filter(User = userAccount)
+
+        image = userAccount.Image
+
+
+
         if allRecipes is not None:
-            context = {"username": username,
-                     "email": email,
-                    "recipes": allRecipes}
-        else:
-            context = {"username": username,
-                       "email": email}
+            context["recipes"] = allRecipes
+
+        if image is not None:
+            context["image"] = image
 
         return render(request, 'app/profile.html', context=context)
 
@@ -468,31 +430,30 @@ class ProfileView(View):
         username = userAccount.Nickname
         email = userAccount.Email
         recipes = Recipe.objects.all()
-        print(button)
-        print(username)
-        print("qucik located" + username)
-        print(userAccount.Nickname)
 
+        context = {"username": username,
+                   "email": email,
+                   "recipes": recipes,
+                   "type": "Recipes"}
+        #handles the input button value
         if "favourite" in button:
-            print("performing favourites")
-            favourites = userAccount.Favourites.all()  # Assuming `favourites` is a ManyToManyField
+            favourites = userAccount.Favourites.all()
             if favourites:
                 recipes = favourites
+                context['type'] = "Favourite Recipes"
             else:
                 recipes = None
 
         if "myRecipes" in button:
             print("performing myrecipe")
-            recipes = Recipe.objects.all()
+            recipes = Recipe.objects.filter(User=userAccount)
 
         if "create" in button:
             print("performing create")
             return redirect(reverse('app:create'))
 
 
-        context = {"username": username,
-                   "email": email,
-                   "recipes": recipes}
+
 
         if request.is_ajax():
             return JsonResponse({
@@ -505,48 +466,55 @@ class ProfileView(View):
 
 class SettingsView(View):
     def get(self, request):
-        user = User.objects.get(username=request.user.username)
+        user = request.user
         userAccount = UserAccount.objects.get(user=user)
-        print("old nickname: " + userAccount.Nickname)
-        return render(request, 'app/settings.html')
+        image = userAccount.Image
+
+        return render(request, 'app/settings.html', context={"image": image})
 
     def post(self, request):
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        phone = request.POST.get('phone')
-        password = request.POST.get('password')
-
         user = User.objects.get(username=request.user.username)
         userAccount = UserAccount.objects.get(user=user)
 
-        print(request.POST)
-
-        print(username.strip())
-        print(email)
-        print(phone)
-        print(password)
-
-        if username is not None:
-            userAccount.Nickname = username
-            userAccount.save()
-            print("empty username")
-            print("new nickname: " + userAccount.Nickname)
+        buttonFunction = request.POST.get('changeImage')
 
 
-        if email is not None:
-            userAccount.Email = email
-            print("empty email")
+        if buttonFunction is not None:
+            print("changing image")
+            image = request.FILES.get('image')
+            if image is not None:
+                userAccount.Image = image
+                userAccount.save()
 
-        if phone is not None:
-            userAccount.PhoneNumber = phone
-            print("empty phone")
 
-        if password is not None:
-            user.password = password
-            print("empty password")
-            user.save()
+        else:
+            username = request.POST.get('username').strip()
+            email = request.POST.get('email').strip()
+            phone = request.POST.get('phone').strip()
+            password = request.POST.get('password').strip()
 
-        print("new nickname: " + userAccount.Nickname)
+            #checks if the fields are blank or not, if not then they will be updated with changes saved on model object
+            if username is not "":
+                userAccount.Nickname = username
+                userAccount.save()
+
+
+            if email is not "":
+                userAccount.Email = email
+                userAccount.save()
+
+
+            if phone is not "":
+                userAccount.PhoneNumber = phone
+                userAccount.save()
+
+
+            #this is not happening in time
+            if password is not "":
+                user.password = password
+                print("empty password")
+                user.save()
+
         # due to ajax sending json we must respond with json when attempting a redirect
         if request.is_ajax():
             return JsonResponse({
@@ -557,4 +525,4 @@ class SettingsView(View):
         return render(request, 'app/settings.html')
 
 
-# Create your views here.
+

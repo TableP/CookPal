@@ -57,6 +57,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 MEDIA_DIR = os.path.join(BASE_DIR, 'media')
+RECIPE_IMAGES_DIR = os.path.join(MEDIA_DIR, 'recipe_images')
+PROFILE_IMAGES_DIR = os.path.join(MEDIA_DIR, 'profile_images')
+MEDIA_URL = '/media/'
+RECIPE_IMAGES_URL = os.path.join(MEDIA_URL, 'recipe_images/')
+PROFILE_IMAGES_URL = os.path.join(MEDIA_URL, 'profile_images/')
+
+MEDIA_DIRS = [
+    RECIPE_IMAGES_DIR,
+    PROFILE_IMAGES_DIR,
+]
 
 TEMPLATES = [
     {
@@ -69,6 +79,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'app.context_processors.useraccount',
             ],
         },
     },

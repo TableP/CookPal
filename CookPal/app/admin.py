@@ -5,7 +5,7 @@ from app.models import UserAccount, Recipe, Support
 # Register your models here.
 
 class UserAccountAdmin(admin.ModelAdmin):
-    list_display = ('Email', 'PhoneNumber', 'Nickname')
+    list_display = ('Nickname', 'Email', 'PhoneNumber')
 
 class recipeAdmin(admin.ModelAdmin):
     list_display = ('Title', 'Ingredients', 'Instructions')
