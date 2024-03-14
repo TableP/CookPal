@@ -194,6 +194,9 @@ class GeneralSupportView(View):
 
         if phone is None:
             phone = "phone"
+        
+        if problemDescription is None:
+            problemDescription = "No Description Given"
 
 
         newSupport = Support(SupportID=uniqueId(title + name + email, Support),
@@ -239,6 +242,9 @@ class TechnicalSupportView(View):
 
         if phone is None:
             phone = "phone"
+        
+        if problemDescription is None:
+            problemDescription = "No Description Given"
 
         newSupport = Support(SupportID=uniqueId(title + name + email, Support),
                              Title=title, Name=name, Email=email, Phone=phone,
@@ -291,6 +297,9 @@ class AccountSupportView(View):
 
         if phone is None:
             phone = "phone"
+        
+        if problemDescription is None:
+            problemDescription = "No Description Given"
 
 
         newSupport = Support(SupportID=uniqueId(title + name + email, Support),
