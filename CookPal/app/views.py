@@ -374,7 +374,8 @@ class RecipeView(View):
             currentRecipe.User = user_account
             currentRecipe.save()
 
-        # user = User.objects.get(username=request.user.username)
+        browsingUser = User.objects.get(username=request.user.username)
+        browsingUserAccount = UserAccount.objects.get(user=browsingUser)
         recipeOwnerNickname = recipeuserAccount.Nickname
         # if no valid recipe is found then this response is given
         if currentRecipe is None:
@@ -386,12 +387,15 @@ class RecipeView(View):
                    'recipeID': currentRecipe.RecipeID,
                    'username': request.user.username,
                    'recipeUserOwner': recipeOwnerNickname,
-                   'recipeUsername': recipeuserAccount}
+                   'recipeUsername': recipeuserAccount,
+                   'userAccount': browsingUserAccount,
+                   'currentRecipe': currentRecipe}
         print(context)
         return render(request, 'app/recipe.html', context=context)
 
     def post(self, request, recipeid):
         print("test favourite")
+        print(request.POST.get('buttonType'))
 
 
         # newComment = Comment(CommentID = uniqueId(recipe + recipeComment + commentDate),
@@ -413,11 +417,20 @@ class RecipeView(View):
         # newRating.save()
         buttonType = request.POST.get('buttonType')
         currentRecipe = self.get_recipe_details(recipeid)
-        if "True" in buttonType:
+        if "1" in buttonType:
+            print("adding to favourite")
             user = User.objects.get(username=request.user.username)
             userAccount = UserAccount.objects.get(user=user)
             userFavourites = userAccount.Favourites
             userFavourites.add(currentRecipe)
+            userAccount.save()
+
+        if "2" in buttonType:
+            print("removing from favourite")
+            user = User.objects.get(username=request.user.username)
+            userAccount = UserAccount.objects.get(user=user)
+            userFavourites = userAccount.Favourites
+            userFavourites.remove(currentRecipe)
             userAccount.save()
 
 
