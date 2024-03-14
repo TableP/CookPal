@@ -183,20 +183,6 @@ class GeneralSupportView(View):
         phone = request.POST.get('phone')
         problemDescription = request.POST.get('problemDescription')
 
-        if email is None:
-            email = "email"
-
-        if title is None:
-            title = "title"
-
-        if name is None:
-            name = "name"
-
-        if phone is None:
-            phone = "phone"
-        
-        if problemDescription is None:
-            problemDescription = "No Description Given"
 
 
         newSupport = Support(SupportID=uniqueId(title + name + email, Support),
@@ -231,20 +217,6 @@ class TechnicalSupportView(View):
         phone = request.POST.get('phone')
         problemDescription = request.POST.get('problemDescription')
 
-        if email is None:
-            email = "email"
-
-        if title is None:
-            title = "title"
-
-        if name is None:
-            name = "name"
-
-        if phone is None:
-            phone = "phone"
-        
-        if problemDescription is None:
-            problemDescription = "No Description Given"
 
         newSupport = Support(SupportID=uniqueId(title + name + email, Support),
                              Title=title, Name=name, Email=email, Phone=phone,
@@ -286,20 +258,6 @@ class AccountSupportView(View):
         phone = request.POST.get('phone')
         problemDescription = request.POST.get('problemDescription')
 
-        if email is None:
-            email = "email"
-
-        if title is None:
-            title = "title"
-
-        if name is None:
-            name = "name"
-
-        if phone is None:
-            phone = "phone"
-        
-        if problemDescription is None:
-            problemDescription = "No Description Given"
 
 
         newSupport = Support(SupportID=uniqueId(title + name + email, Support),
