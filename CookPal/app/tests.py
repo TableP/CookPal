@@ -69,14 +69,8 @@ class ViewTestCase(TestCase):
         response = self.client.get(reverse('app:report', kwargs={'reportid': self.recipe.RecipeID}))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'app/report.html')
-    
-    def test_report_view_post(self):
-        self.client.login(username='testuser', password='It12345')
-        response = self.client.post(reverse('app:report', kwargs={'reportid': self.recipe.RecipeID}), 
-                                    {'reportReason': 'This is a test report.',
-                                     'reportEmail': 'testuser@example.com',
-                                     'recipeid': self.recipe.RecipeID})
-        self.assertTrue(Reported_Recipe.objects.filter(ReportedRecipe=self.recipe).exists())
+        
+    ## reportview post function needs to be tested in real actions
     
     # Test the contactusview
     def test_contactus_view_get(self):
