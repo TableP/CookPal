@@ -16,6 +16,17 @@
       document.addEventListener('DOMContentLoaded', function() {
       console.log("DOM content loaded");
       console.log("started");
+
+      var currentUrl = window.location.href;
+
+
+   // Get the input element by its ID
+    var inputElement = document.getElementById("shareLinkInput");
+
+    // Override the value of the input field
+    inputElement.value = currentUrl;
+
+
        function getCookie(name) {
             var cookieValue = null;
             if (document.cookie && document.cookie !== '') {
@@ -206,13 +217,15 @@ const addToFavourite = document.getElementById("report");
                           </div>
                         </div>
                         
-
+                        {% if userAccount %}
                         <button type="button" class="btn btn-outline-danger mt-5" id="report">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shield-fill-exclamation" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.8 11.8 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7 7 0 0 0 1.048-.625 11.8 11.8 0 0 0 2.517-2.453c1.678-2.195 3.061-5.513 2.465-9.99a1.54 1.54 0 0 0-1.044-1.263 63 63 0 0 0-2.887-.87C9.843.266 8.69 0 8 0m-.55 8.502L7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0M8.002 12a1 1 0 1 1 0-2 1 1 0 0 1 0 2"></path>
                             </svg>
                             Report
                           </button>
+                        {% else %}
+                        {% endif %}
 
                     </div>
                 </div>
@@ -225,32 +238,32 @@ const addToFavourite = document.getElementById("report");
                 </div>
             </div>
 
-            <form>
-                <div class="row align-items-md-stretch">
-                
-                    <div class="rating p-5 mt-4 col-md-3">
-                        <p class="col-md-8 fs-6 text-center">Leave comment</p>
-                        <span class="star" data-value="5">☆</span>
-                        <span class="star" data-value="4">☆</span>
-                        <span class="star" data-value="3">☆</span>
-                        <span class="star" data-value="2">☆</span>
-                        <span class="star" data-value="1">☆</span>
-                    </div>
+<!--            <form>-->
+<!--                <div class="row align-items-md-stretch">-->
+<!--                -->
+<!--                    <div class="rating p-5 mt-4 col-md-3">-->
+<!--                        <p class="col-md-8 fs-6 text-center">Leave comment</p>-->
+<!--                        <span class="star" data-value="5">☆</span>-->
+<!--                        <span class="star" data-value="4">☆</span>-->
+<!--                        <span class="star" data-value="3">☆</span>-->
+<!--                        <span class="star" data-value="2">☆</span>-->
+<!--                        <span class="star" data-value="1">☆</span>-->
+<!--                    </div>-->
 
-                
-                    <div class="comment p-5 mt-4 col-md-8">
-                        <textarea class="form-control" id="comment" placeholder="Leave your comment here..." rows="3"></textarea>
-                    </div>  
+<!--                -->
+<!--                    <div class="comment p-5 mt-4 col-md-8">-->
+<!--                        <textarea class="form-control" id="comment" placeholder="Leave your comment here..." rows="3"></textarea>-->
+<!--                    </div>  -->
 
-                    <div class="commentPost p-5 mt-5 col-md-1">
-                        <button type="submit" class="btn btn-primary mt-1">Post</button>
-                    </div>
+<!--                    <div class="commentPost p-5 mt-5 col-md-1">-->
+<!--                        <button type="submit" class="btn btn-primary mt-1">Post</button>-->
+<!--                    </div>-->
 
-                </div>
-            
-            </form>
-          
-        </div>
+<!--                </div>-->
+<!--            -->
+<!--            </form>-->
+<!--          -->
+<!--        </div>-->
 
 <!--        <div class="container py-4">-->
 <!--          <div class="row align-items-md-stretch">-->
