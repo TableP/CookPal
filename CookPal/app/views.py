@@ -32,6 +32,7 @@ class HomepageView(View):
         return render(request, 'app/homepage.html', context=context)
 
     def post(self, request):
+
         searchTitle = request.POST.get('search-submit')
         searchType = request.POST.get('type-submit')
         originType = request.POST.get('origin-submit')
@@ -47,25 +48,28 @@ class HomepageView(View):
 
         elif "Select a type" in searchType and "Select origin" in originType\
                 :
+            print("search success6")
             searchRecipes = Recipe.objects.filter(
                 Title=searchTitle,
             )
 
         elif "Select a type" in searchType\
                  and "Select origin" not in originType:
+            print("search success3")
             searchRecipes = Recipe.objects.filter(
                 Title=searchTitle,
                 Origin=originType
             )
         elif "Select origin" in originType\
                  and "Select a type" not in searchType:
+            print("search success1")
             searchRecipes = Recipe.objects.filter(
-                Title=searchTitle,
                 Type=searchType
             )
 
         elif "" in searchTitle\
                 and "Select a type" not in searchType and "Select origin" not in originType:
+            print("search success2")
             searchRecipes = Recipe.objects.filter(
                 Type=searchType,
                 Origin=originType
