@@ -134,9 +134,7 @@ def uniqueId(String, Model):
     # The 21-28 is the hash of current time
     id8 = hashlib.md5(time.encode()).hexdigest()[-8:]
     # The 29-30 is the random character
-    num1 = random.randint(33, 126)
-    num2 = random.randint(33, 126)
-    id2 = chr(num1) + chr(num2)
+    id2 = ''.join(random.choices('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', k=2))
     # Combine the 3 parts to get the unique id
     id = id20 + id8 + id2
     PrimaryKey = Model._meta.pk.name

@@ -29,6 +29,7 @@ class HomepageView(View):
         allRecipes = Recipe.objects.all()
         context = {"recipes": allRecipes}
 
+
         return render(request, 'app/homepage.html', context=context)
 
     def post(self, request):
